@@ -37,22 +37,24 @@ def bbox_token_mask(bbox, H, W, device, pad=0.06):
 
 class SharingController:
     """Holds per-step shared state driving all SharedSelfAttnProcessors."""
-    def __init__(self, share_layers, alpha_schedule=None, cfg=True):
+    def __init__(self, share_layers, alpha_schedule=None, cfg=True, alpha_max=0.55):
         # set of (dotted) module-name substrings where sharing is active
         self.share_layers = share_layers
         self.cfg = cfg
-        self.mode = "off"            # 'off' | 'capture' | 'inject'
+        self.alpha_max = alpha_max   # late-stage sharing strength (knob → consistency)
+        self.mode = "off"            # 'off' | 'on'
         self.cur_t = None            # current timestep (int key)
         self.active = []             # list of (entity_name, bbox)
         self.bank = {}               # bank[entity][layer_key][t_int] = (K_bbox, V_bbox)
+        self.freeze_bank = False     # if True, never capture (anchor already built)
         self.alpha_schedule = alpha_schedule or self._default_alpha
 
-    @staticmethod
-    def _default_alpha(t):
-        # t in [0,1000]; share weakly at high noise, strongly late
-        if t > 700:   return 0.10
-        if t > 300:   return 0.30
-        return 0.55
+    def _default_alpha(self, t):
+        # t in [0,1000]; share weakly at high noise, strongly late. Scaled by alpha_max.
+        a = self.alpha_max
+        if t > 700:   return a * 0.18
+        if t > 300:   return a * 0.55
+        return a
 
     def reset_active(self):
         self.active = []
@@ -107,6 +109,8 @@ class SharedSelfAttnProcessor:
                     continue
                 anc = self.ctrl.get_anchor(self.layer_key, entity)
                 if anc is None:
+                    if self.ctrl.freeze_bank:
+                        continue                       # anchor pre-built; no capture
                     # first occurrence → CAPTURE this entity's bbox K/V
                     Kb = k4[cond_lo:cond_lo+1, :, m, :].detach()
                     Vb = v4[cond_lo:cond_lo+1, :, m, :].detach()
@@ -135,17 +139,16 @@ def install_sharing(unet, controller: SharingController):
     """Replace attn1 (self-attn) processors with SharedSelfAttnProcessor.
     attn2 (cross-attn) processors are left untouched."""
     procs = {}
+    n = 0
     for name in list(unet.attn_processors.keys()):
         mod_name = name[:-len(".processor")] if name.endswith(".processor") else name
         if mod_name.endswith("attn1"):
-            layer_key = mod_name
             active = any(s in mod_name for s in controller.share_layers)
-            procs[name] = SharedSelfAttnProcessor(controller, layer_key, active)
+            n += int(active)
+            procs[name] = SharedSelfAttnProcessor(controller, mod_name, active)
         else:
             procs[name] = unet.attn_processors[name]
     unet.set_attn_processor(procs)
-    n = sum(1 for p in procs.values()
-            if isinstance(p, SharedSelfAttnProcessor) and p.active_share)
     print(f"[sharing] active in {n} attn1 layers (share_layers={controller.share_layers})")
 
 
