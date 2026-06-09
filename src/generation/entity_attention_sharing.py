@@ -116,14 +116,27 @@ class SharedSelfAttnProcessor:
                     Vb = v4[cond_lo:cond_lo+1, :, m, :].detach()
                     self.ctrl.capture_entity(self.layer_key, entity, Kb, Vb)
                 else:
-                    # seen before → INJECT anchor into current bbox tokens
-                    Kb, Vb = anc
+                    # seen before → EXTENDED self-attention (StoryDiffusion/ConsiStory
+                    # style): bbox query attends to [current tokens ; anchor tokens]
+                    # in ONE softmax. Current K/V are kept → image structure preserved
+                    # (no output replacement), anchor only ADDS identity. Strength is
+                    # set by a bias on the anchor-key logits (alpha → log-domain).
+                    Kb, Vb = anc                                  # (1,nh,nb,hd)
                     alpha = self.ctrl.alpha_schedule(self.ctrl.cur_t)
-                    qsel = q4[cond_lo:cond_lo+1, :, m, :]        # (1,nh,nb,hd)
-                    o_ref = F.scaled_dot_product_attention(qsel, Kb, Vb, dropout_p=0.)
-                    o_cond = out[cond_lo:cond_lo+1]
-                    o_cond[:, :, m, :] = (1 - alpha) * o_cond[:, :, m, :] + alpha * o_ref
-                    out[cond_lo:cond_lo+1] = o_cond
+                    qsel = q4[cond_lo:cond_lo+1, :, m, :]         # (1,nh,nq,hd)
+                    k_cur = k4[cond_lo:cond_lo+1]                 # (1,nh,S,hd) full image
+                    v_cur = v4[cond_lo:cond_lo+1]
+                    k_cat = torch.cat([k_cur, Kb], dim=2)         # append anchor keys
+                    v_cat = torch.cat([v_cur, Vb], dim=2)
+                    # additive bias: 0 for current keys, log-weight for anchor keys
+                    nq = qsel.shape[2]; ncur = k_cur.shape[2]; nanc = Kb.shape[2]
+                    bias = torch.zeros(1, 1, nq, ncur + nanc, device=qsel.device, dtype=qsel.dtype)
+                    # alpha in (0,1) → bias so anchor share ~ alpha at equal logits
+                    import math
+                    bias[..., ncur:] = math.log(max(alpha, 1e-3) / max(1 - alpha, 1e-3))
+                    o_ext = F.scaled_dot_product_attention(qsel, k_cat, v_cat,
+                                                           attn_mask=bias, dropout_p=0.)
+                    out[cond_lo:cond_lo+1, :, m, :] = o_ext
 
         out = out.transpose(1, 2).reshape(Bsz, S, inner).to(q.dtype)
         out = attn.to_out[0](out); out = attn.to_out[1](out)
