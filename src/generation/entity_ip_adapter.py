@@ -32,11 +32,38 @@ def bbox_mask(bbox, H, W, device, pad=0.05):
     return m.view(H * W)
 
 
+def bbox_mask_feathered(bbox, H, W, device, pad=0.05, feather=0.08):
+    """Soft bbox mask in [0,1] with a smooth falloff at the edges — avoids the
+    hard seam between adjacent entity regions that makes the background look
+    stitched."""
+    x1, y1, x2, y2 = bbox
+    x1 = max(0., x1 - pad); y1 = max(0., y1 - pad)
+    x2 = min(1., x2 + pad); y2 = min(1., y2 + pad)
+    ys = (torch.arange(H, device=device).float() + 0.5) / H
+    xs = (torch.arange(W, device=device).float() + 0.5) / W
+    f = max(feather, 1e-4)
+    def band(c, lo, hi):
+        return (torch.clamp((c - lo) / f, 0, 1) * torch.clamp((hi - c) / f, 0, 1)).clamp(0, 1)
+    mx = band(xs, x1, x2).view(1, W)
+    my = band(ys, y1, y2).view(H, 1)
+    return (mx * my).reshape(H * W)
+
+
 class EntityIPController:
-    """Per-shot state: active entities' projected image tokens + bboxes."""
-    def __init__(self, scale=1.0, cfg=True):
+    """Per-shot state: active entities' projected image tokens + bboxes.
+
+    t_apply_below: only inject IP when the current timestep < this (∈[0,1000]).
+    The scene/background structure is laid by text+GLIGEN in the early (high-t)
+    steps; injecting identity only in later (low-t) steps refines the object's
+    appearance WITHOUT restructuring the background → coherent, seam-free scene.
+    feather: soft bbox edges (also reduces the inter-region seam).
+    """
+    def __init__(self, scale=1.0, cfg=True, t_apply_below=1000.0, feather=0.08):
         self.scale = scale
         self.cfg = cfg
+        self.t_apply_below = t_apply_below
+        self.feather = feather
+        self.cur_t = None
         self.active = []     # list of (entity_name, tokens[num_tok,768], bbox)
         self.enabled = True
 
@@ -80,22 +107,23 @@ class EntityIPAttnProcessor(torch.nn.Module):
         out = out.transpose(1, 2).reshape(Bsz, S, inner)   # (B,S,inner) text attn
 
         # ── per-entity bbox-localized IP image cross-attention ──────────────
-        if (self.ctrl.enabled and self.ctrl.active and S == int(S**0.5)**2):
+        gate = (self.ctrl.cur_t is None) or (self.ctrl.cur_t < self.ctrl.t_apply_below)
+        if (self.ctrl.enabled and self.ctrl.active and gate and S == int(S**0.5)**2):
             Hf = Wf = int(S**0.5)
             cond_lo = Bsz // 2 if (self.ctrl.cfg and Bsz % 2 == 0) else 0
             dev = hidden_states.device
             qc = q4[cond_lo:cond_lo+1]                      # (1,nh,S,hd) cond query
             add = torch.zeros(1, S, inner, device=dev, dtype=out.dtype)
             for name, tokens, bbox in self.ctrl.active:
-                m = bbox_mask(bbox, Hf, Wf, dev)
-                if m.sum() == 0:
+                m = bbox_mask_feathered(bbox, Hf, Wf, dev, feather=self.ctrl.feather)
+                if float(m.max()) == 0:
                     continue
                 t = tokens.to(self.to_k_ip.weight.dtype).unsqueeze(0)  # (1,num_tok,768)
                 k_ip = self.to_k_ip(t).to(qc.dtype).view(1, -1, nh, hd).transpose(1, 2)
                 v_ip = self.to_v_ip(t).to(qc.dtype).view(1, -1, nh, hd).transpose(1, 2)
                 ip = F.scaled_dot_product_attention(qc, k_ip, v_ip, dropout_p=0.)
                 ip = ip.transpose(1, 2).reshape(1, S, inner)
-                add[:, m, :] = add[:, m, :] + ip[:, m, :]   # only inside this bbox
+                add = add + ip * m.view(1, S, 1)            # soft bbox-localized
             out[cond_lo:cond_lo+1] = out[cond_lo:cond_lo+1] + self.ctrl.scale * add
 
         out = out.to(q.dtype)
@@ -169,4 +197,11 @@ def install_entity_ip(unet, controller, ip):
         else:
             procs[name] = unet.attn_processors[name]
     unet.set_attn_processor(procs)
+    # forward pre-hook to track the current timestep for the controller's gate
+    def _hook(module, args, kwargs):
+        t = kwargs.get("timestep", args[1] if len(args) > 1 else None)
+        if t is not None:
+            controller.cur_t = float(t.flatten()[0].item() if torch.is_tensor(t) else t)
+        return None
+    unet.register_forward_pre_hook(_hook, with_kwargs=True)
     print(f"[entity-ip] installed on {n} attn2 layers")

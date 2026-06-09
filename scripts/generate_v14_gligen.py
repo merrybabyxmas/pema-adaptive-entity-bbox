@@ -50,8 +50,12 @@ def main():
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--segment-anchors", action="store_true",
-                    help="SAM-segment each anchor onto neutral bg so IP tokens "
-                         "carry object identity only (no anchor background leak)")
+                    help="SAM mask → zero bg patch tokens (object-only identity)")
+    ap.add_argument("--t-apply-below", type=float, default=700.0,
+                    help="inject IP only when timestep < this (late steps) so the "
+                         "background structure stays coherent; 1000=always")
+    ap.add_argument("--feather", type=float, default=0.10,
+                    help="soft bbox edge width (reduces inter-region seam)")
     args = ap.parse_args()
 
     base = Path(__file__).parent.parent
@@ -92,7 +96,8 @@ def main():
     img_base.save(out / "gligen_only.png")
 
     # 3) install our per-entity IP processors onto the GLIGEN unet
-    ctrl = EntityIPController(scale=args.scale, cfg=True)
+    ctrl = EntityIPController(scale=args.scale, cfg=True,
+                              t_apply_below=args.t_apply_below, feather=args.feather)
     install_entity_ip(g.unet, ctrl, ip)
     ctrl.set_active([("cat", cat_tok, CAT_BBOX), ("dog", dog_tok, DOG_BBOX)])
     img_ours = run_gligen(torch.Generator(dev).manual_seed(args.seed))
