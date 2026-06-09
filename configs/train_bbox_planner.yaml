@@ -1,0 +1,37 @@
+seed: 42
+
+paths:
+  train_jsonl: data/splits/train.jsonl
+  val_jsonl: data/splits/val.jsonl
+  output_dir: outputs/runs/bbox_planner_v2
+
+model:
+  arch: planner           # planner | mlp_baseline
+  d_text: 512             # CLIP ViT-B-32 output dim
+  d_model: 256
+  num_layers: 4
+  num_heads: 8
+  dropout: 0.1
+  text_encoder: clip_vitb32
+  freeze_text_encoder: true
+
+training:
+  epochs: 50
+  batch_size: 64
+  num_workers: 4
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  grad_clip: 1.0
+  mixed_precision: true
+  max_shots: 5
+  max_entities: 5
+
+loss:
+  lambda_iou: 1.0
+  lambda_overlap: 1.0
+  lambda_temp: 0.0
+  overlap_tau: 0.25
+
+eval:
+  eval_every: 1
+  save_every: 5

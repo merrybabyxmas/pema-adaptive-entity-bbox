@@ -1,0 +1,46 @@
+paths:
+  raw_video_dir: data/raw_videos
+  shot_dir: data/shots
+  frame_dir: data/frames
+  caption_dir: data/captions
+  plan_dir: data/lm_plans
+  detection_dir: data/detections
+  jsonl_raw: data/jsonl/all_samples.raw.jsonl
+  jsonl_filtered: data/jsonl/all_samples.filtered.jsonl
+  splits_dir: data/splits
+
+shot_segmentation:
+  method: pyscenedetect
+  min_shot_sec: 1.0
+  max_shot_sec: 8.0
+
+keyframe:
+  mode: middle
+
+captioner: blip2_or_llava
+batch_size: 8
+
+detector:
+  name: grounding_dino
+  box_threshold: 0.35
+  text_threshold: 0.25
+
+jsonl_build:
+  min_shots: 3
+  max_shots: 5
+  max_entities: 5
+  max_active_per_shot: 4
+
+filtering:
+  min_det_score: 0.45
+  min_box_area: 0.01
+  max_box_area: 0.85
+  max_aspect_ratio: 6.0
+  min_aspect_ratio: 0.15
+  remove_multiple_same_class: true
+
+split:
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  split_key: video_id

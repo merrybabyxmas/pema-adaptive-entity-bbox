@@ -1,0 +1,6 @@
+checkpoint: outputs/runs/bbox_planner_v1/checkpoints/best.pt
+data: data/splits/test.jsonl
+output: outputs/eval/bbox_planner_v1_test.json
+batch_size: 64
+max_shots: 5
+max_entities: 5
