@@ -45,6 +45,8 @@ def main():
     ap.add_argument("--dog-anchor", required=True)
     ap.add_argument("--out", default="outputs/generations/v14g")
     ap.add_argument("--scale", type=float, default=1.0)
+    ap.add_argument("--weight-name", default="ip-adapter_sd15.bin",
+                    help="ip-adapter_sd15.bin (4 tok) or ip-adapter-plus_sd15.bin (16 tok, stronger id)")
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
@@ -60,7 +62,7 @@ def main():
         "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16,
         safety_checker=None).to(dev)
     sd.load_ip_adapter("h94/IP-Adapter", subfolder="models",
-                       weight_name="ip-adapter_sd15.bin")
+                       weight_name=args.weight_name)
     ip = extract_ip_adapter(sd)
     cat_tok = entity_tokens(ip, cat_img, dev)
     dog_tok = entity_tokens(ip, dog_img, dev)

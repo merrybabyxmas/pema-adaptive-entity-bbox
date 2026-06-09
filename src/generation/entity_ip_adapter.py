@@ -119,18 +119,26 @@ def extract_ip_adapter(ipa_pipe):
         if hasattr(proc, "to_k_ip"):
             layers[name] = (proc.to_k_ip[0], proc.to_v_ip[0])   # single ip-adapter
     image_proj = ipa_pipe.unet.encoder_hid_proj.image_projection_layers[0]
-    return dict(layers=layers, image_proj=image_proj,
+    # IP-Adapter-Plus uses a Resampler over CLIP PATCH features (penultimate
+    # hidden states), not the pooled image_embeds → richer/stronger identity.
+    plus = "Plus" in type(image_proj).__name__
+    return dict(layers=layers, image_proj=image_proj, plus=plus,
                 image_encoder=ipa_pipe.image_encoder,
                 feature_extractor=ipa_pipe.feature_extractor)
 
 
 @torch.no_grad()
 def entity_tokens(ip, pil_image, device):
-    """CLIP(ref) -> image_proj -> (num_tokens, 768) entity image tokens."""
+    """CLIP(ref) -> image_proj -> (num_tokens, 768) entity image tokens.
+    Plus: feed penultimate patch hidden states; base: pooled image_embeds."""
     fe = ip["feature_extractor"]; enc = ip["image_encoder"]; proj = ip["image_proj"]
     px = fe(pil_image, return_tensors="pt").pixel_values.to(device, enc.dtype)
-    emb = enc(px).image_embeds                       # (1,1024)
-    toks = proj(emb)                                 # (1,num_tok,768)
+    if ip.get("plus"):
+        feats = enc(px, output_hidden_states=True).hidden_states[-2]  # (1,257,1280)
+        toks = proj(feats)                            # (1,16,768)
+    else:
+        emb = enc(px).image_embeds                    # (1,1024)
+        toks = proj(emb)                              # (1,4,768)
     return toks.squeeze(0)
 
 
