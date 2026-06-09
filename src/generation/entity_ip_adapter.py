@@ -128,17 +128,30 @@ def extract_ip_adapter(ipa_pipe):
 
 
 @torch.no_grad()
-def entity_tokens(ip, pil_image, device):
+def entity_tokens(ip, pil_image, device, obj_mask=None):
     """CLIP(ref) -> image_proj -> (num_tokens, 768) entity image tokens.
-    Plus: feed penultimate patch hidden states; base: pooled image_embeds."""
+    Plus: feed penultimate patch hidden states; base: pooled image_embeds.
+
+    obj_mask (H,W in [0,1]): if given (Plus only), zero out BACKGROUND patch
+    tokens before the Resampler so the identity tokens encode the object only —
+    no anchor background leaks into the generated scene."""
+    import torch as _t
     fe = ip["feature_extractor"]; enc = ip["image_encoder"]; proj = ip["image_proj"]
     px = fe(pil_image, return_tensors="pt").pixel_values.to(device, enc.dtype)
     if ip.get("plus"):
-        feats = enc(px, output_hidden_states=True).hidden_states[-2]  # (1,257,1280)
+        feats = enc(px, output_hidden_states=True).hidden_states[-2]  # (1,1+P,1280)
+        if obj_mask is not None:
+            P = feats.shape[1] - 1                     # patch count (e.g. 256)
+            g = int(P ** 0.5)
+            m = _t.tensor(obj_mask, dtype=_t.float32, device=device)[None, None]
+            m = _t.nn.functional.interpolate(m, size=(g, g), mode="area")
+            keep = (m.reshape(-1) > 0.4).to(feats.dtype)            # (P,) patch keep
+            patch = feats[:, 1:, :] * keep[None, :, None]           # zero bg patches
+            feats = _t.cat([feats[:, :1, :], patch], dim=1)         # keep CLS
         toks = proj(feats)                            # (1,16,768)
     else:
-        emb = enc(px).image_embeds                    # (1,1024)
-        toks = proj(emb)                              # (1,4,768)
+        emb = enc(px).image_embeds
+        toks = proj(emb)
     return toks.squeeze(0)
 
 

@@ -49,6 +49,9 @@ def main():
                     help="ip-adapter_sd15.bin (4 tok) or ip-adapter-plus_sd15.bin (16 tok, stronger id)")
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--segment-anchors", action="store_true",
+                    help="SAM-segment each anchor onto neutral bg so IP tokens "
+                         "carry object identity only (no anchor background leak)")
     args = ap.parse_args()
 
     base = Path(__file__).parent.parent
@@ -64,8 +67,13 @@ def main():
     sd.load_ip_adapter("h94/IP-Adapter", subfolder="models",
                        weight_name=args.weight_name)
     ip = extract_ip_adapter(sd)
-    cat_tok = entity_tokens(ip, cat_img, dev)
-    dog_tok = entity_tokens(ip, dog_img, dev)
+    cat_m = dog_m = None
+    if args.segment_anchors:
+        from src.generation.anchor_segment import AnchorSegmenter
+        seg = AnchorSegmenter(device=dev)
+        cat_m = seg.mask(cat_img); dog_m = seg.mask(dog_img)   # zero bg patch tokens
+    cat_tok = entity_tokens(ip, cat_img, dev, obj_mask=cat_m)
+    dog_tok = entity_tokens(ip, dog_img, dev, obj_mask=dog_m)
 
     # 2) GLIGEN pipe for layout
     g = StableDiffusionGLIGENPipeline.from_pretrained(
