@@ -56,6 +56,9 @@ def main():
                          "background structure stays coherent; 1000=always")
     ap.add_argument("--feather", type=float, default=0.10,
                     help="soft bbox edge width (reduces inter-region seam)")
+    ap.add_argument("--text-suppress", type=float, default=1.0,
+                    help="text cross-attn factor INSIDE entity bboxes; 0=anchor-only "
+                         "interior (no text prior), 1=keep text")
     args = ap.parse_args()
 
     base = Path(__file__).parent.parent
@@ -97,7 +100,8 @@ def main():
 
     # 3) install our per-entity IP processors onto the GLIGEN unet
     ctrl = EntityIPController(scale=args.scale, cfg=True,
-                              t_apply_below=args.t_apply_below, feather=args.feather)
+                              t_apply_below=args.t_apply_below, feather=args.feather,
+                              text_suppress=args.text_suppress)
     install_entity_ip(g.unet, ctrl, ip)
     ctrl.set_active([("cat", cat_tok, CAT_BBOX), ("dog", dog_tok, DOG_BBOX)])
     img_ours = run_gligen(torch.Generator(dev).manual_seed(args.seed))

@@ -58,11 +58,16 @@ class EntityIPController:
     appearance WITHOUT restructuring the background → coherent, seam-free scene.
     feather: soft bbox edges (also reduces the inter-region seam).
     """
-    def __init__(self, scale=1.0, cfg=True, t_apply_below=1000.0, feather=0.08):
+    def __init__(self, scale=1.0, cfg=True, t_apply_below=1000.0, feather=0.08,
+                 text_suppress=1.0):
         self.scale = scale
         self.cfg = cfg
         self.t_apply_below = t_apply_below
         self.feather = feather
+        # text_suppress: factor applied to TEXT cross-attention output INSIDE
+        # entity bboxes (1.0 = keep text; 0.0 = bbox interior driven by anchor IP
+        # + GLIGEN structure only, no text prior). Outside bboxes text is full.
+        self.text_suppress = text_suppress
         self.cur_t = None
         self.active = []     # list of (entity_name, tokens[num_tok,768], bbox)
         self.enabled = True
@@ -114,16 +119,22 @@ class EntityIPAttnProcessor(torch.nn.Module):
             dev = hidden_states.device
             qc = q4[cond_lo:cond_lo+1]                      # (1,nh,S,hd) cond query
             add = torch.zeros(1, S, inner, device=dev, dtype=out.dtype)
+            union = torch.zeros(S, device=dev, dtype=out.dtype)
             for name, tokens, bbox in self.ctrl.active:
                 m = bbox_mask_feathered(bbox, Hf, Wf, dev, feather=self.ctrl.feather)
                 if float(m.max()) == 0:
                     continue
+                union = torch.maximum(union, m)
                 t = tokens.to(self.to_k_ip.weight.dtype).unsqueeze(0)  # (1,num_tok,768)
                 k_ip = self.to_k_ip(t).to(qc.dtype).view(1, -1, nh, hd).transpose(1, 2)
                 v_ip = self.to_v_ip(t).to(qc.dtype).view(1, -1, nh, hd).transpose(1, 2)
                 ip = F.scaled_dot_product_attention(qc, k_ip, v_ip, dropout_p=0.)
                 ip = ip.transpose(1, 2).reshape(1, S, inner)
                 add = add + ip * m.view(1, S, 1)            # soft bbox-localized
+            # suppress TEXT cross-attn inside entity bboxes (anchor-only interior)
+            if self.ctrl.text_suppress < 1.0:
+                factor = 1.0 - (1.0 - self.ctrl.text_suppress) * union   # (S,)
+                out[cond_lo:cond_lo+1] = out[cond_lo:cond_lo+1] * factor.view(1, S, 1)
             out[cond_lo:cond_lo+1] = out[cond_lo:cond_lo+1] + self.ctrl.scale * add
 
         out = out.to(q.dtype)
