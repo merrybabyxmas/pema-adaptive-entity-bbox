@@ -153,7 +153,7 @@ def main():
     ap.add_argument("--guidance-scale", type=float, default=7.5)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--alphas", type=float, nargs="*", default=[0.5])
-    ap.add_argument("--n-candidates", type=int, default=4)
+    ap.add_argument("--n-candidates", type=int, default=1)
     ap.add_argument("--no-clip", action="store_true")
     ap.add_argument("--share-layers", nargs="*",
                     default=["mid_block", "up_blocks.1", "up_blocks.2"])

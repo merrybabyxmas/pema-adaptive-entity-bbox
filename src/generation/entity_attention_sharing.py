@@ -128,12 +128,15 @@ class SharedSelfAttnProcessor:
                     v_cur = v4[cond_lo:cond_lo+1]
                     k_cat = torch.cat([k_cur, Kb], dim=2)         # append anchor keys
                     v_cat = torch.cat([v_cur, Vb], dim=2)
-                    # additive bias: 0 for current keys, log-weight for anchor keys
+                    # additive bias on anchor keys so the anchor's TOTAL attention
+                    # mass ≈ alpha — must correct for key-count imbalance (anchor has
+                    # ~tens of keys vs ~hundreds of current keys, else it is drowned
+                    # out and the anchor identity is barely followed).
                     nq = qsel.shape[2]; ncur = k_cur.shape[2]; nanc = Kb.shape[2]
                     bias = torch.zeros(1, 1, nq, ncur + nanc, device=qsel.device, dtype=qsel.dtype)
-                    # alpha in (0,1) → bias so anchor share ~ alpha at equal logits
                     import math
-                    bias[..., ncur:] = math.log(max(alpha, 1e-3) / max(1 - alpha, 1e-3))
+                    a = min(max(alpha, 1e-3), 1 - 1e-3)
+                    bias[..., ncur:] = math.log(a / (1 - a)) + math.log(ncur / max(nanc, 1))
                     o_ext = F.scaled_dot_product_attention(qsel, k_cat, v_cat,
                                                            attn_mask=bias, dropout_p=0.)
                     out[cond_lo:cond_lo+1, :, m, :] = o_ext
