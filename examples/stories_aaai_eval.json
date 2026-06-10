@@ -1,0 +1,1844 @@
+[
+  {
+    "name": "aaai_A00_dog_car_reentry",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "car",
+        "prompt": "a red car"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog and a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car in a park",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a black dog and a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_A01_cat_bicycle_reentry",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat and a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle on a street",
+        "present": [
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat and a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_A02_horse_sheep_goat_reentry",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep in a field",
+        "present": [
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_A03_elephant_dog_reentry",
+    "entities": [
+      {
+        "name": "elephant",
+        "prompt": "a gray elephant"
+      },
+      {
+        "name": "dog",
+        "prompt": "a small black dog"
+      }
+    ],
+    "background": "on grass",
+    "shots": [
+      {
+        "prompt": "a gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a small black dog on grass",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_A04_bus_truck_car_reentry",
+    "entities": [
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      },
+      {
+        "name": "car",
+        "prompt": "a small red car"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a small red car on a road",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_A05_guitar_piano_reentry",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a black piano in a room",
+        "present": [
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B00_dog_car_entry_exit",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "car",
+        "prompt": "a red car"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog in a park",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a black dog and a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car in a park",
+        "present": [
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B01_cat_bicycle_entry_exit",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat on a street",
+        "present": [
+          "cat"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat and a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle on a street",
+        "present": [
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B02_horse_sheep_goat_entry_exit",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse in a field",
+        "present": [
+          "horse"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep in a field",
+        "present": [
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B03_elephant_dog_entry_exit",
+    "entities": [
+      {
+        "name": "elephant",
+        "prompt": "a gray elephant"
+      },
+      {
+        "name": "dog",
+        "prompt": "a small black dog"
+      }
+    ],
+    "background": "on grass",
+    "shots": [
+      {
+        "prompt": "a gray elephant on grass",
+        "present": [
+          "elephant"
+        ]
+      },
+      {
+        "prompt": "a gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a small black dog on grass",
+        "present": [
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B04_bus_truck_car_entry_exit",
+    "entities": [
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      },
+      {
+        "name": "car",
+        "prompt": "a small red car"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a yellow bus on a road",
+        "present": [
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a small red car on a road",
+        "present": [
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_B05_guitar_piano_entry_exit",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar in a room",
+        "present": [
+          "guitar"
+        ]
+      },
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a black piano in a room",
+        "present": [
+          "piano"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C00_cat_dog_bird_stagger",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "bird",
+        "prompt": "a blue bird"
+      }
+    ],
+    "background": "in a yard",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat in a yard",
+        "present": [
+          "cat"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat and a black dog in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat, a black dog, and a blue bird in a yard",
+        "present": [
+          "cat",
+          "dog",
+          "bird"
+        ]
+      },
+      {
+        "prompt": "a black dog and a blue bird in a yard",
+        "present": [
+          "dog",
+          "bird"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C01_car_bicycle_bus_truck_stagger",
+    "entities": [
+      {
+        "name": "car",
+        "prompt": "a red car"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      },
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a red car on a street",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car and a blue bicycle on a street",
+        "present": [
+          "car",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a red car, a blue bicycle, and a yellow bus on a street",
+        "present": [
+          "car",
+          "bicycle",
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle and a yellow bus on a street",
+        "present": [
+          "bicycle",
+          "bus/truck"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C02_horse_sheep_goat_elephant_stagger",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      },
+      {
+        "name": "elephant",
+        "prompt": "a gray elephant"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse in a field",
+        "present": [
+          "horse"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse, a white sheep, and a gray elephant in a field",
+        "present": [
+          "horse",
+          "sheep/goat",
+          "elephant"
+        ]
+      },
+      {
+        "prompt": "a white sheep and a gray elephant in a field",
+        "present": [
+          "sheep/goat",
+          "elephant"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C03_guitar_piano_cup_stagger",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      },
+      {
+        "name": "cup",
+        "prompt": "a white cup"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar in a room",
+        "present": [
+          "guitar"
+        ]
+      },
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a brown guitar, a black piano, and a white cup in a room",
+        "present": [
+          "guitar",
+          "piano",
+          "cup"
+        ]
+      },
+      {
+        "prompt": "a black piano and a white cup in a room",
+        "present": [
+          "piano",
+          "cup"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C04_dog_bicycle_ball_stagger",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      },
+      {
+        "name": "ball",
+        "prompt": "a red ball"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog in a park",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a black dog and a blue bicycle in a park",
+        "present": [
+          "dog",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a black dog, a blue bicycle, and a red ball in a park",
+        "present": [
+          "dog",
+          "bicycle",
+          "ball"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle and a red ball in a park",
+        "present": [
+          "bicycle",
+          "ball"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_C05_sofa_chair_cup_stagger",
+    "entities": [
+      {
+        "name": "sofa",
+        "prompt": "a green sofa"
+      },
+      {
+        "name": "chair",
+        "prompt": "a wooden chair"
+      },
+      {
+        "name": "cup",
+        "prompt": "a white cup"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a green sofa in a room",
+        "present": [
+          "sofa"
+        ]
+      },
+      {
+        "prompt": "a green sofa and a wooden chair in a room",
+        "present": [
+          "sofa",
+          "chair"
+        ]
+      },
+      {
+        "prompt": "a green sofa, a wooden chair, and a white cup in a room",
+        "present": [
+          "sofa",
+          "chair",
+          "cup"
+        ]
+      },
+      {
+        "prompt": "a wooden chair and a white cup in a room",
+        "present": [
+          "chair",
+          "cup"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D00_dog_car_occlusion",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "car",
+        "prompt": "a red car"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog beside a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a black dog in front of a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car behind a black dog in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D01_cat_bicycle_occlusion",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat beside a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat in front of a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle behind a tuxedo cat on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D02_horse_sheep_goat_occlusion",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse beside a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse in front of a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep behind a brown horse in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D03_elephant_dog_occlusion",
+    "entities": [
+      {
+        "name": "elephant",
+        "prompt": "a gray elephant"
+      },
+      {
+        "name": "dog",
+        "prompt": "a small black dog"
+      }
+    ],
+    "background": "on grass",
+    "shots": [
+      {
+        "prompt": "a gray elephant beside a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a gray elephant in front of a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a small black dog behind a gray elephant on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D04_bus_truck_car_occlusion",
+    "entities": [
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      },
+      {
+        "name": "car",
+        "prompt": "a small red car"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a yellow bus beside a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a yellow bus in front of a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a small red car behind a yellow bus on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_D05_guitar_piano_occlusion",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar beside a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a brown guitar in front of a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a black piano behind a brown guitar in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E00_elephant_dog_size",
+    "entities": [
+      {
+        "name": "elephant",
+        "prompt": "a large gray elephant"
+      },
+      {
+        "name": "dog",
+        "prompt": "a small black dog"
+      }
+    ],
+    "background": "on grass",
+    "shots": [
+      {
+        "prompt": "a large gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a small black dog on grass",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a large gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E01_bus_truck_car_size",
+    "entities": [
+      {
+        "name": "bus/truck",
+        "prompt": "a large yellow bus"
+      },
+      {
+        "name": "car",
+        "prompt": "a small red car"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a large yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a small red car on a road",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a large yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E02_horse_sheep_goat_size",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a large brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a small white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a large brown horse and a small white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a small white sheep in a field",
+        "present": [
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a large brown horse and a small white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E03_sofa_cup_size",
+    "entities": [
+      {
+        "name": "sofa",
+        "prompt": "a large green sofa"
+      },
+      {
+        "name": "cup",
+        "prompt": "a small white cup"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a large green sofa and a small white cup in a room",
+        "present": [
+          "sofa",
+          "cup"
+        ]
+      },
+      {
+        "prompt": "a small white cup in a room",
+        "present": [
+          "cup"
+        ]
+      },
+      {
+        "prompt": "a large green sofa and a small white cup in a room",
+        "present": [
+          "sofa",
+          "cup"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E04_car_bicycle_size",
+    "entities": [
+      {
+        "name": "car",
+        "prompt": "a red car"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a red car and a blue bicycle on a street",
+        "present": [
+          "car",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle on a street",
+        "present": [
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a red car and a blue bicycle on a street",
+        "present": [
+          "car",
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_E05_piano_guitar_size",
+    "entities": [
+      {
+        "name": "piano",
+        "prompt": "a large black piano"
+      },
+      {
+        "name": "guitar",
+        "prompt": "a small brown guitar"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a large black piano and a small brown guitar in a room",
+        "present": [
+          "piano",
+          "guitar"
+        ]
+      },
+      {
+        "prompt": "a small brown guitar in a room",
+        "present": [
+          "guitar"
+        ]
+      },
+      {
+        "prompt": "a large black piano and a small brown guitar in a room",
+        "present": [
+          "piano",
+          "guitar"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F00_cat_dog_fusion",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      }
+    ],
+    "background": "in a yard",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat and a black dog in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a black dog in a yard",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat and a black dog in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F01_horse_sheep_goat_fusion",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep in a field",
+        "present": [
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F02_car_bus_truck_fusion",
+    "entities": [
+      {
+        "name": "car",
+        "prompt": "a red car"
+      },
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a red car and a yellow bus on a road",
+        "present": [
+          "car",
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a yellow bus on a road",
+        "present": [
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a red car and a yellow bus on a road",
+        "present": [
+          "car",
+          "bus/truck"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F03_guitar_piano_fusion",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a black piano in a room",
+        "present": [
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F04_chair_sofa_fusion",
+    "entities": [
+      {
+        "name": "chair",
+        "prompt": "a wooden chair"
+      },
+      {
+        "name": "sofa",
+        "prompt": "a green sofa"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a wooden chair and a green sofa in a room",
+        "present": [
+          "chair",
+          "sofa"
+        ]
+      },
+      {
+        "prompt": "a green sofa in a room",
+        "present": [
+          "sofa"
+        ]
+      },
+      {
+        "prompt": "a wooden chair and a green sofa in a room",
+        "present": [
+          "chair",
+          "sofa"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_F05_bicycle_motorcycle_fusion",
+    "entities": [
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      },
+      {
+        "name": "motorcycle",
+        "prompt": "a black motorcycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a blue bicycle and a black motorcycle on a street",
+        "present": [
+          "bicycle",
+          "motorcycle"
+        ]
+      },
+      {
+        "prompt": "a black motorcycle on a street",
+        "present": [
+          "motorcycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle and a black motorcycle on a street",
+        "present": [
+          "bicycle",
+          "motorcycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G00_dog_car_absence",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "car",
+        "prompt": "a red car"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog and a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car in a park",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a black dog in a park",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a black dog and a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G01_cat_bicycle_absence",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat and a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle on a street",
+        "present": [
+          "bicycle"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat on a street",
+        "present": [
+          "cat"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat and a blue bicycle on a street",
+        "present": [
+          "cat",
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G02_horse_sheep_goat_absence",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep in a field",
+        "present": [
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse in a field",
+        "present": [
+          "horse"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G03_elephant_dog_absence",
+    "entities": [
+      {
+        "name": "elephant",
+        "prompt": "a gray elephant"
+      },
+      {
+        "name": "dog",
+        "prompt": "a small black dog"
+      }
+    ],
+    "background": "on grass",
+    "shots": [
+      {
+        "prompt": "a gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a small black dog on grass",
+        "present": [
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a gray elephant on grass",
+        "present": [
+          "elephant"
+        ]
+      },
+      {
+        "prompt": "a gray elephant and a small black dog on grass",
+        "present": [
+          "elephant",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G04_bus_truck_car_absence",
+    "entities": [
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      },
+      {
+        "name": "car",
+        "prompt": "a small red car"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a small red car on a road",
+        "present": [
+          "car"
+        ]
+      },
+      {
+        "prompt": "a yellow bus on a road",
+        "present": [
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a yellow bus and a small red car on a road",
+        "present": [
+          "bus/truck",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_G05_guitar_piano_absence",
+    "entities": [
+      {
+        "name": "guitar",
+        "prompt": "a brown guitar"
+      },
+      {
+        "name": "piano",
+        "prompt": "a black piano"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a black piano in a room",
+        "present": [
+          "piano"
+        ]
+      },
+      {
+        "prompt": "a brown guitar in a room",
+        "present": [
+          "guitar"
+        ]
+      },
+      {
+        "prompt": "a brown guitar and a black piano in a room",
+        "present": [
+          "guitar",
+          "piano"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H00_cat_dog_order",
+    "entities": [
+      {
+        "name": "cat",
+        "prompt": "a tuxedo cat"
+      },
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      }
+    ],
+    "background": "in a yard",
+    "shots": [
+      {
+        "prompt": "a tuxedo cat left of a black dog in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a black dog left of a tuxedo cat in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      },
+      {
+        "prompt": "a tuxedo cat in front of a black dog in a yard",
+        "present": [
+          "cat",
+          "dog"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H01_car_bus_truck_order",
+    "entities": [
+      {
+        "name": "car",
+        "prompt": "a red car"
+      },
+      {
+        "name": "bus/truck",
+        "prompt": "a yellow bus"
+      }
+    ],
+    "background": "on a road",
+    "shots": [
+      {
+        "prompt": "a red car left of a yellow bus on a road",
+        "present": [
+          "car",
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a yellow bus left of a red car on a road",
+        "present": [
+          "car",
+          "bus/truck"
+        ]
+      },
+      {
+        "prompt": "a red car in front of a yellow bus on a road",
+        "present": [
+          "car",
+          "bus/truck"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H02_horse_sheep_goat_order",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep/goat",
+        "prompt": "a white sheep"
+      }
+    ],
+    "background": "in a field",
+    "shots": [
+      {
+        "prompt": "a brown horse left of a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a white sheep left of a brown horse in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      },
+      {
+        "prompt": "a brown horse in front of a white sheep in a field",
+        "present": [
+          "horse",
+          "sheep/goat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H03_dog_car_order",
+    "entities": [
+      {
+        "name": "dog",
+        "prompt": "a black dog"
+      },
+      {
+        "name": "car",
+        "prompt": "a red car"
+      }
+    ],
+    "background": "in a park",
+    "shots": [
+      {
+        "prompt": "a black dog left of a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a red car left of a black dog in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      },
+      {
+        "prompt": "a black dog in front of a red car in a park",
+        "present": [
+          "dog",
+          "car"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H04_bicycle_motorcycle_order",
+    "entities": [
+      {
+        "name": "bicycle",
+        "prompt": "a blue bicycle"
+      },
+      {
+        "name": "motorcycle",
+        "prompt": "a black motorcycle"
+      }
+    ],
+    "background": "on a street",
+    "shots": [
+      {
+        "prompt": "a blue bicycle left of a black motorcycle on a street",
+        "present": [
+          "bicycle",
+          "motorcycle"
+        ]
+      },
+      {
+        "prompt": "a black motorcycle left of a blue bicycle on a street",
+        "present": [
+          "bicycle",
+          "motorcycle"
+        ]
+      },
+      {
+        "prompt": "a blue bicycle in front of a black motorcycle on a street",
+        "present": [
+          "bicycle",
+          "motorcycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "aaai_H05_sofa_chair_order",
+    "entities": [
+      {
+        "name": "sofa",
+        "prompt": "a green sofa"
+      },
+      {
+        "name": "chair",
+        "prompt": "a wooden chair"
+      }
+    ],
+    "background": "in a room",
+    "shots": [
+      {
+        "prompt": "a green sofa left of a wooden chair in a room",
+        "present": [
+          "sofa",
+          "chair"
+        ]
+      },
+      {
+        "prompt": "a wooden chair left of a green sofa in a room",
+        "present": [
+          "sofa",
+          "chair"
+        ]
+      },
+      {
+        "prompt": "a green sofa in front of a wooden chair in a room",
+        "present": [
+          "sofa",
+          "chair"
+        ]
+      }
+    ]
+  }
+]
