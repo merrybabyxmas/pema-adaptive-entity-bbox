@@ -1,0 +1,1064 @@
+[
+ {
+  "name": "iv_00_dog_car",
+  "entities": [
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   },
+   {
+    "name": "car",
+    "prompt": "a red car"
+   }
+  ],
+  "background": "in a park",
+  "shots": [
+   {
+    "prompt": "a dog and a red car in a park",
+    "present": [
+     "dog",
+     "car"
+    ]
+   },
+   {
+    "prompt": "a red car in a park",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a dog and a red car in a park",
+    "present": [
+     "dog",
+     "car"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_01_cat_bicycle",
+  "entities": [
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   },
+   {
+    "name": "bicycle",
+    "prompt": "a bicycle"
+   }
+  ],
+  "background": "on a street",
+  "shots": [
+   {
+    "prompt": "a cat on a street",
+    "present": [
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a cat and a bicycle on a street",
+    "present": [
+     "cat",
+     "bicycle"
+    ]
+   },
+   {
+    "prompt": "a bicycle on a street",
+    "present": [
+     "bicycle"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_02_horse_sheep_goat",
+  "entities": [
+   {
+    "name": "horse",
+    "prompt": "a horse"
+   },
+   {
+    "name": "sheep/goat",
+    "prompt": "a sheep"
+   }
+  ],
+  "background": "in a field",
+  "shots": [
+   {
+    "prompt": "a horse and a sheep in a field",
+    "present": [
+     "horse",
+     "sheep/goat"
+    ]
+   },
+   {
+    "prompt": "a horse in a field",
+    "present": [
+     "horse"
+    ]
+   },
+   {
+    "prompt": "a horse and a sheep in a field",
+    "present": [
+     "horse",
+     "sheep/goat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_03_car_bus_truck",
+  "entities": [
+   {
+    "name": "car",
+    "prompt": "a red car"
+   },
+   {
+    "name": "bus/truck",
+    "prompt": "a yellow bus"
+   }
+  ],
+  "background": "in a room",
+  "shots": [
+   {
+    "prompt": "a red car in a room",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a yellow bus in a room",
+    "present": [
+     "bus/truck"
+    ]
+   },
+   {
+    "prompt": "a red car and a yellow bus in a room",
+    "present": [
+     "car",
+     "bus/truck"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_04_elephant_dog",
+  "entities": [
+   {
+    "name": "elephant",
+    "prompt": "an elephant"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "on grass",
+  "shots": [
+   {
+    "prompt": "an elephant and a dog on grass",
+    "present": [
+     "elephant",
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a dog on grass",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "an elephant on grass",
+    "present": [
+     "elephant"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_05_guitar_piano",
+  "entities": [
+   {
+    "name": "guitar",
+    "prompt": "a guitar"
+   },
+   {
+    "name": "piano",
+    "prompt": "a piano"
+   }
+  ],
+  "background": "in a yard",
+  "shots": [
+   {
+    "prompt": "a guitar and a piano in a yard",
+    "present": [
+     "guitar",
+     "piano"
+    ]
+   },
+   {
+    "prompt": "a piano in a yard",
+    "present": [
+     "piano"
+    ]
+   },
+   {
+    "prompt": "a guitar and a piano in a yard",
+    "present": [
+     "guitar",
+     "piano"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_06_tiger_elephant",
+  "entities": [
+   {
+    "name": "tiger",
+    "prompt": "a tiger"
+   },
+   {
+    "name": "elephant",
+    "prompt": "an elephant"
+   }
+  ],
+  "background": "in a park",
+  "shots": [
+   {
+    "prompt": "a tiger in a park",
+    "present": [
+     "tiger"
+    ]
+   },
+   {
+    "prompt": "a tiger and an elephant in a park",
+    "present": [
+     "tiger",
+     "elephant"
+    ]
+   },
+   {
+    "prompt": "an elephant in a park",
+    "present": [
+     "elephant"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_07_dog_sofa",
+  "entities": [
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   },
+   {
+    "name": "sofa",
+    "prompt": "a sofa"
+   }
+  ],
+  "background": "on a street",
+  "shots": [
+   {
+    "prompt": "a dog and a sofa on a street",
+    "present": [
+     "dog",
+     "sofa"
+    ]
+   },
+   {
+    "prompt": "a dog on a street",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a dog and a sofa on a street",
+    "present": [
+     "dog",
+     "sofa"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_08_cat_laptop",
+  "entities": [
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   },
+   {
+    "name": "laptop",
+    "prompt": "a laptop"
+   }
+  ],
+  "background": "in a field",
+  "shots": [
+   {
+    "prompt": "a cat in a field",
+    "present": [
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a laptop in a field",
+    "present": [
+     "laptop"
+    ]
+   },
+   {
+    "prompt": "a cat and a laptop in a field",
+    "present": [
+     "cat",
+     "laptop"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_09_duck_dog",
+  "entities": [
+   {
+    "name": "duck",
+    "prompt": "a duck"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "in a room",
+  "shots": [
+   {
+    "prompt": "a duck and a dog in a room",
+    "present": [
+     "duck",
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a dog in a room",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a duck in a room",
+    "present": [
+     "duck"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_10_rabbit_cat",
+  "entities": [
+   {
+    "name": "rabbit",
+    "prompt": "a rabbit"
+   },
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   }
+  ],
+  "background": "on grass",
+  "shots": [
+   {
+    "prompt": "a rabbit and a cat on grass",
+    "present": [
+     "rabbit",
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a cat on grass",
+    "present": [
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a rabbit and a cat on grass",
+    "present": [
+     "rabbit",
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_11_bird_cat",
+  "entities": [
+   {
+    "name": "bird",
+    "prompt": "a bird"
+   },
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   }
+  ],
+  "background": "in a yard",
+  "shots": [
+   {
+    "prompt": "a bird in a yard",
+    "present": [
+     "bird"
+    ]
+   },
+   {
+    "prompt": "a bird and a cat in a yard",
+    "present": [
+     "bird",
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a cat in a yard",
+    "present": [
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_12_horse_dog",
+  "entities": [
+   {
+    "name": "horse",
+    "prompt": "a horse"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "in a park",
+  "shots": [
+   {
+    "prompt": "a horse and a dog in a park",
+    "present": [
+     "horse",
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a horse in a park",
+    "present": [
+     "horse"
+    ]
+   },
+   {
+    "prompt": "a horse and a dog in a park",
+    "present": [
+     "horse",
+     "dog"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_13_bicycle_car",
+  "entities": [
+   {
+    "name": "bicycle",
+    "prompt": "a bicycle"
+   },
+   {
+    "name": "car",
+    "prompt": "a car"
+   }
+  ],
+  "background": "on a street",
+  "shots": [
+   {
+    "prompt": "a bicycle on a street",
+    "present": [
+     "bicycle"
+    ]
+   },
+   {
+    "prompt": "a car on a street",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a bicycle and a car on a street",
+    "present": [
+     "bicycle",
+     "car"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_14_ball_sports_ball_dog",
+  "entities": [
+   {
+    "name": "ball/sports_ball",
+    "prompt": "a soccer ball"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "in a field",
+  "shots": [
+   {
+    "prompt": "a soccer ball and a dog in a field",
+    "present": [
+     "ball/sports_ball",
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a dog in a field",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a soccer ball in a field",
+    "present": [
+     "ball/sports_ball"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_15_piano_guitar",
+  "entities": [
+   {
+    "name": "piano",
+    "prompt": "a piano"
+   },
+   {
+    "name": "guitar",
+    "prompt": "a guitar"
+   }
+  ],
+  "background": "in a room",
+  "shots": [
+   {
+    "prompt": "a piano and a guitar in a room",
+    "present": [
+     "piano",
+     "guitar"
+    ]
+   },
+   {
+    "prompt": "a guitar in a room",
+    "present": [
+     "guitar"
+    ]
+   },
+   {
+    "prompt": "a piano and a guitar in a room",
+    "present": [
+     "piano",
+     "guitar"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_16_camera_laptop",
+  "entities": [
+   {
+    "name": "camera",
+    "prompt": "a camera"
+   },
+   {
+    "name": "laptop",
+    "prompt": "a laptop"
+   }
+  ],
+  "background": "on grass",
+  "shots": [
+   {
+    "prompt": "a camera on grass",
+    "present": [
+     "camera"
+    ]
+   },
+   {
+    "prompt": "a camera and a laptop on grass",
+    "present": [
+     "camera",
+     "laptop"
+    ]
+   },
+   {
+    "prompt": "a laptop on grass",
+    "present": [
+     "laptop"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_17_elephant_horse",
+  "entities": [
+   {
+    "name": "elephant",
+    "prompt": "an elephant"
+   },
+   {
+    "name": "horse",
+    "prompt": "a horse"
+   }
+  ],
+  "background": "in a yard",
+  "shots": [
+   {
+    "prompt": "an elephant and a horse in a yard",
+    "present": [
+     "elephant",
+     "horse"
+    ]
+   },
+   {
+    "prompt": "an elephant in a yard",
+    "present": [
+     "elephant"
+    ]
+   },
+   {
+    "prompt": "an elephant and a horse in a yard",
+    "present": [
+     "elephant",
+     "horse"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_18_tiger_dog",
+  "entities": [
+   {
+    "name": "tiger",
+    "prompt": "a tiger"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "in a park",
+  "shots": [
+   {
+    "prompt": "a tiger in a park",
+    "present": [
+     "tiger"
+    ]
+   },
+   {
+    "prompt": "a dog in a park",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a tiger and a dog in a park",
+    "present": [
+     "tiger",
+     "dog"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_19_cat_car",
+  "entities": [
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   },
+   {
+    "name": "car",
+    "prompt": "a car"
+   }
+  ],
+  "background": "on a street",
+  "shots": [
+   {
+    "prompt": "a cat and a car on a street",
+    "present": [
+     "cat",
+     "car"
+    ]
+   },
+   {
+    "prompt": "a car on a street",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a cat on a street",
+    "present": [
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_20_sheep_goat_cat",
+  "entities": [
+   {
+    "name": "sheep/goat",
+    "prompt": "a sheep"
+   },
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   }
+  ],
+  "background": "in a field",
+  "shots": [
+   {
+    "prompt": "a sheep and a cat in a field",
+    "present": [
+     "sheep/goat",
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a cat in a field",
+    "present": [
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a sheep and a cat in a field",
+    "present": [
+     "sheep/goat",
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_21_duck_rabbit",
+  "entities": [
+   {
+    "name": "duck",
+    "prompt": "a duck"
+   },
+   {
+    "name": "rabbit",
+    "prompt": "a rabbit"
+   }
+  ],
+  "background": "in a room",
+  "shots": [
+   {
+    "prompt": "a duck in a room",
+    "present": [
+     "duck"
+    ]
+   },
+   {
+    "prompt": "a duck and a rabbit in a room",
+    "present": [
+     "duck",
+     "rabbit"
+    ]
+   },
+   {
+    "prompt": "a rabbit in a room",
+    "present": [
+     "rabbit"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_22_bus_truck_bicycle",
+  "entities": [
+   {
+    "name": "bus/truck",
+    "prompt": "a bus"
+   },
+   {
+    "name": "bicycle",
+    "prompt": "a bicycle"
+   }
+  ],
+  "background": "on grass",
+  "shots": [
+   {
+    "prompt": "a bus and a bicycle on grass",
+    "present": [
+     "bus/truck",
+     "bicycle"
+    ]
+   },
+   {
+    "prompt": "a bus on grass",
+    "present": [
+     "bus/truck"
+    ]
+   },
+   {
+    "prompt": "a bus and a bicycle on grass",
+    "present": [
+     "bus/truck",
+     "bicycle"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_23_dog_bicycle",
+  "entities": [
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   },
+   {
+    "name": "bicycle",
+    "prompt": "a bicycle"
+   }
+  ],
+  "background": "in a yard",
+  "shots": [
+   {
+    "prompt": "a dog in a yard",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a bicycle in a yard",
+    "present": [
+     "bicycle"
+    ]
+   },
+   {
+    "prompt": "a dog and a bicycle in a yard",
+    "present": [
+     "dog",
+     "bicycle"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_24_horse_car",
+  "entities": [
+   {
+    "name": "horse",
+    "prompt": "a horse"
+   },
+   {
+    "name": "car",
+    "prompt": "a car"
+   }
+  ],
+  "background": "in a park",
+  "shots": [
+   {
+    "prompt": "a horse and a car in a park",
+    "present": [
+     "horse",
+     "car"
+    ]
+   },
+   {
+    "prompt": "a car in a park",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a horse in a park",
+    "present": [
+     "horse"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_25_cat_dog",
+  "entities": [
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "on a street",
+  "shots": [
+   {
+    "prompt": "a cat and a dog on a street",
+    "present": [
+     "cat",
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a dog on a street",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a cat and a dog on a street",
+    "present": [
+     "cat",
+     "dog"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_26_elephant_bird",
+  "entities": [
+   {
+    "name": "elephant",
+    "prompt": "an elephant"
+   },
+   {
+    "name": "bird",
+    "prompt": "a bird"
+   }
+  ],
+  "background": "in a field",
+  "shots": [
+   {
+    "prompt": "an elephant in a field",
+    "present": [
+     "elephant"
+    ]
+   },
+   {
+    "prompt": "an elephant and a bird in a field",
+    "present": [
+     "elephant",
+     "bird"
+    ]
+   },
+   {
+    "prompt": "a bird in a field",
+    "present": [
+     "bird"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_27_guitar_cat",
+  "entities": [
+   {
+    "name": "guitar",
+    "prompt": "a guitar"
+   },
+   {
+    "name": "cat",
+    "prompt": "a cat"
+   }
+  ],
+  "background": "in a room",
+  "shots": [
+   {
+    "prompt": "a guitar and a cat in a room",
+    "present": [
+     "guitar",
+     "cat"
+    ]
+   },
+   {
+    "prompt": "a guitar in a room",
+    "present": [
+     "guitar"
+    ]
+   },
+   {
+    "prompt": "a guitar and a cat in a room",
+    "present": [
+     "guitar",
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_28_car_dog",
+  "entities": [
+   {
+    "name": "car",
+    "prompt": "a car"
+   },
+   {
+    "name": "dog",
+    "prompt": "a dog"
+   }
+  ],
+  "background": "on grass",
+  "shots": [
+   {
+    "prompt": "a car on grass",
+    "present": [
+     "car"
+    ]
+   },
+   {
+    "prompt": "a dog on grass",
+    "present": [
+     "dog"
+    ]
+   },
+   {
+    "prompt": "a car and a dog on grass",
+    "present": [
+     "car",
+     "dog"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "iv_29_rabbit_duck",
+  "entities": [
+   {
+    "name": "rabbit",
+    "prompt": "a rabbit"
+   },
+   {
+    "name": "duck",
+    "prompt": "a duck"
+   }
+  ],
+  "background": "in a yard",
+  "shots": [
+   {
+    "prompt": "a rabbit and a duck in a yard",
+    "present": [
+     "rabbit",
+     "duck"
+    ]
+   },
+   {
+    "prompt": "a duck in a yard",
+    "present": [
+     "duck"
+    ]
+   },
+   {
+    "prompt": "a rabbit in a yard",
+    "present": [
+     "rabbit"
+    ]
+   }
+  ]
+ }
+]

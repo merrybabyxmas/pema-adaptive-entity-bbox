@@ -185,7 +185,7 @@ def main():
             # enforce a background gap so large same-body-plan entities (quadrupeds,
             # vehicles) don't bridge across touching boxes into one fused body.
             if len(boxes) > 1:
-                boxes = enforce_gap(deoverlap_boxes(dict(boxes)))
+                boxes = deoverlap_boxes(dict(boxes))   # learned layout; no gap hack
             ents = []
             for e, b in boxes.items():
                 cx = (b[0] + b[2]) / 2

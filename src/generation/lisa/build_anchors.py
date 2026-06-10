@@ -62,9 +62,10 @@ def build_entity_anchor(
         generator=generator,
     ).images[0]
 
-    # Save anchor image
+    # Save anchor image (slug the filename; entity names may contain '/')
     os.makedirs(save_dir, exist_ok=True)
-    image_path = os.path.join(save_dir, f"{entity_name}.png")
+    fname = "".join(c if (c.isalnum() or c in "-_") else "_" for c in entity_name)
+    image_path = os.path.join(save_dir, f"{fname}.png")
     image.save(image_path)
 
     return {

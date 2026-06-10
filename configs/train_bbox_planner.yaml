@@ -3,7 +3,7 @@ seed: 42
 paths:
   train_jsonl: data/splits/train.jsonl
   val_jsonl: data/splits/val.jsonl
-  output_dir: outputs/runs/bbox_planner_v2
+  output_dir: outputs/runs/bbox_planner_v3
 
 model:
   arch: planner           # planner | mlp_baseline
