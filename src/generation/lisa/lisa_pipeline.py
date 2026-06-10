@@ -164,7 +164,10 @@ class LISAPipeline:
         negative_prompt = (
             "blurry, low quality, deformed, ugly, duplicate, "
             "merged figures, identity mixing, chimera, "
-            "extra limbs, disfigured"
+            "extra limbs, disfigured, "
+            # anti-duplication / fusion (one instance per region)
+            "two dogs, two cats, multiple animals, cloned, twins, conjoined, "
+            "fused bodies, extra head, extra legs, second animal, group of animals"
         )
 
         # --- Generate ---
