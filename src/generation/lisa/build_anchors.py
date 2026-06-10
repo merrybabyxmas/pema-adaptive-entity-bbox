@@ -44,11 +44,17 @@ def build_entity_anchor(
     gen_cfg = config["generation"]
     anchor_cfg = config["anchors"]
 
-    full_prompt = f"{entity_prompt}, {anchor_cfg['entity_prompt_suffix']}"
+    full_prompt = f"a single {entity_prompt}, solo, alone, {anchor_cfg['entity_prompt_suffix']}"
+    # steer SDXL away from contact-sheet / sticker-collage of many instances
+    anchor_negative = (
+        "multiple, many, group, collage, grid, contact sheet, duplicate, "
+        "repeated, several, two, three, tiled, montage, blurry, low quality"
+    )
 
     generator = torch.Generator(device=gen_cfg["device"]).manual_seed(gen_cfg["seed"])
     image = pipe(
         prompt=full_prompt,
+        negative_prompt=anchor_negative,
         height=gen_cfg["height"],
         width=gen_cfg["width"],
         num_inference_steps=gen_cfg["num_inference_steps"],
