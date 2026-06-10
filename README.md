@@ -54,6 +54,23 @@ CUDA_VISIBLE_DEVICES=0 python scripts/run_30_stories.py \
 ### 4. Evaluate the planner — `scripts/eval_bbox_planner.py`
 L1 / IoU / GIoU / center / area error + overlap on the val/test split.
 
+### 5. (extension) Multi-shot video — `scripts/run_video_i2v.py`
+Core stays ours (planner → per-shot keyframes). Video synthesis is the **official**
+`THUDM/CogVideoX-5b-I2V` (diffusers): each keyframe is animated into a clip and the
+shots are concatenated into one multi-shot video. Nothing about the generator is
+custom — only the planner is.
+
+## Occlusion depth (planner predicts who is in front)
+The planner also predicts a per-entity **occlusion depth** (5th head channel, 0=back,
+1=front), supervised by a pairwise ranking loss against order derived from VidOR
+`in_front_of`/`behind` relations (96.9% of co-present pairs have an edge; geometric
+bottom-edge/area prior fills the rest). `01_prepare_vidor_vidstg.py` extracts it,
+`train_bbox_planner.py` adds `depth_ranking_loss` (val depth-order accuracy ≈ 0.77).
+At generation, `run_30_stories.enforce` arranges co-present boxes side-by-side with a
+partial overlap seam and `mask_utils.apply_depth_occlusion` lets the **front** entity
+own the shared region — natural occlusion instead of fusion. Checkpoint:
+`outputs/runs/bbox_planner_v4_depth/`.
+
 ---
 
 ## Key design decisions

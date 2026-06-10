@@ -25,7 +25,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.generation.lisa.mask_utils import create_entity_masks, normalize_masks
+from src.generation.lisa.mask_utils import create_entity_masks, normalize_masks, apply_depth_occlusion
 
 
 class LISAPipeline:
@@ -122,6 +122,11 @@ class LISAPipeline:
         # --- Build entity masks ---
         bboxes = [tuple(ent["bbox"]) for ent in shot["entities"]]
         entity_masks, bg_mask = create_entity_masks(bboxes, latent_h, latent_w, sigma, self.device)
+        # depth-ordered occlusion: front entity (higher predicted depth) owns the
+        # overlap; the back one is carved out -> natural occlusion, no fusion.
+        depths = [ent.get("depth", 0.5) for ent in shot["entities"]]
+        if len(entity_masks) > 1:
+            entity_masks, bg_mask = apply_depth_occlusion(entity_masks, depths)
         entity_masks, bg_mask = normalize_masks(entity_masks, bg_mask)
 
         # --- Load entity anchor images ---

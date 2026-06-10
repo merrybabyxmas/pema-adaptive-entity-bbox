@@ -3,7 +3,7 @@ seed: 42
 paths:
   train_jsonl: data/splits/train.jsonl
   val_jsonl: data/splits/val.jsonl
-  output_dir: outputs/runs/bbox_planner_v3
+  output_dir: outputs/runs/bbox_planner_v4_depth
 
 model:
   arch: planner           # planner | mlp_baseline
@@ -30,6 +30,8 @@ loss:
   lambda_iou: 1.0
   lambda_overlap: 1.0
   lambda_temp: 0.0
+  lambda_depth: 1.0       # occlusion-depth pairwise ranking loss
+  depth_margin: 0.1
   overlap_tau: 0.25
 
 eval:

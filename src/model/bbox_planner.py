@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from src.model.attention import LayoutBlock
-from src.model.heads import BBoxHead
+from src.model.heads import BBoxHead, MLP
 from src.model.embeddings import StateEmbedding, RelationBias
 
 
@@ -19,6 +19,8 @@ class PresenceAwareBBoxPlanner(nn.Module):
             LayoutBlock(d_model, num_heads, dropout) for _ in range(num_layers)
         ])
         self.bbox_head = BBoxHead(d_model)
+        # occlusion depth per entity (0=back, 1=front), sigmoid in [0,1]
+        self.depth_head = MLP(d_model, d_model, 1, num_layers=2)
 
     def forward(self, shot_emb: torch.Tensor, entity_emb: torch.Tensor,
                 state_ids: torch.Tensor, presence: torch.Tensor,
@@ -45,7 +47,8 @@ class PresenceAwareBBoxPlanner(nn.Module):
             q = layer(q, presence, rel_bias)
 
         boxes = self.bbox_head(q)                          # [B,S,E,4]
-        return boxes
+        depth = torch.sigmoid(self.depth_head(q))          # [B,S,E,1] in [0,1]
+        return torch.cat([boxes, depth], dim=-1)           # [B,S,E,5]
 
 
 class MLPBaseline(nn.Module):
@@ -61,7 +64,7 @@ class MLPBaseline(nn.Module):
             nn.Dropout(dropout),
             nn.Linear(d_model * 2, d_model),
             nn.GELU(),
-            nn.Linear(d_model, 4),
+            nn.Linear(d_model, 5),
         )
 
     def forward(self, shot_emb, entity_emb, state_ids, presence, relation_ids):
@@ -70,7 +73,7 @@ class MLPBaseline(nn.Module):
         he = self.entity_proj(entity_emb)[:, None, :, :].expand(B, S, E, -1)
         hst = self.state_emb(state_ids)
         q = torch.cat([hs, he, hst], dim=-1)
-        return torch.sigmoid(self.mlp(q))
+        return torch.sigmoid(self.mlp(q))  # [B,S,E,5], last channel = depth
 
 
 def build_model(cfg: dict) -> nn.Module:

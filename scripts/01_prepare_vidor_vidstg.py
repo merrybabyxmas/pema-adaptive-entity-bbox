@@ -56,6 +56,63 @@ def map_relation(pred: str) -> str:
     return "none"
 
 
+# VidOR native occlusion/depth predicates (subject relative to object).
+# subj is IN FRONT of obj:
+FRONT_PRED = {"in_front_of", "lean_on", "inside", "sit_on", "lie_on", "hug", "ride"}
+# subj is BEHIND obj:
+BACK_PRED = {"behind"}
+
+
+def compute_segment_depth(active_tids, boxes, seg_rel_raw, tid2cat):
+    """Per-entity ordinal DEPTH in [0,1] (0=back, 1=front) for one segment.
+
+    Signal = relational (VidOR in_front_of/behind/lean_on/inside) where available,
+    over a geometric closeness prior (lower bottom-edge + larger area => closer).
+    Returns (cat_depth dict, cat_edges list[[front_cat, back_cat]] from relations only).
+    """
+    if not active_tids:
+        return {}, []
+    # geometric closeness prior: closer objects sit lower (larger y2) and are bigger
+    geom = {}
+    for t in active_tids:
+        x1, y1, x2, y2 = boxes[t]
+        area = (x2 - x1) * (y2 - y1)
+        geom[t] = 0.6 * y2 + 0.4 * min(1.0, area * 2.0)
+    # relational front/back votes (high confidence)
+    vote = defaultdict(float)
+    edges = []
+    for subj, pred, obj in seg_rel_raw:
+        if subj not in geom or obj not in geom:
+            continue
+        p = pred.lower().strip()
+        if p in FRONT_PRED:
+            f, b = subj, obj
+        elif p in BACK_PRED:
+            f, b = obj, subj
+        else:
+            continue
+        vote[f] += 1.0
+        vote[b] -= 1.0
+        edges.append((f, b))
+    score = {t: geom[t] + 0.5 * vote.get(t, 0.0) for t in active_tids}
+    lo, hi = min(score.values()), max(score.values())
+    depth = {t: (0.5 if hi - lo < 1e-6 else (score[t] - lo) / (hi - lo))
+             for t in active_tids}
+    # aggregate tid -> category (average if a category has multiple tids)
+    acc, cnt = defaultdict(float), defaultdict(int)
+    for t in active_tids:
+        c = tid2cat.get(t, "object")
+        acc[c] += depth[t]; cnt[c] += 1
+    cat_depth = {c: round(acc[c] / cnt[c], 4) for c in acc}
+    cat_edges = []
+    seen = set()
+    for f, b in edges:
+        cf, cb = tid2cat.get(f, "object"), tid2cat.get(b, "object")
+        if cf != cb and (cf, cb) not in seen:
+            seen.add((cf, cb)); cat_edges.append([cf, cb])
+    return cat_depth, cat_edges
+
+
 def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
                             segment_sec: float = 3.0, stride_sec: float = 1.5,
                             min_entity_frames: int = 3) -> list[dict]:
@@ -154,6 +211,7 @@ def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
 
         # get relations active in this segment
         seg_rels = []
+        seg_rel_raw = []  # (subj_tid, raw_predicate, obj_tid) for depth extraction
         for rel in rel_index:
             subj, obj = rel["subj"], rel["obj"]
             if (subj in boxes and obj in boxes and
@@ -162,6 +220,10 @@ def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
                 cat_subj = tid2cat.get(subj, "object")
                 cat_obj = tid2cat.get(obj, "object")
                 seg_rels.append([cat_subj, mapped, cat_obj])
+                seg_rel_raw.append((subj, rel["predicate"], obj))
+
+        # per-entity occlusion DEPTH (relational + geometric prior)
+        cat_depth, cat_edges = compute_segment_depth(active_tids, boxes, seg_rel_raw, tid2cat)
 
         seg_entities = [tid2cat.get(t, "object") for t in active_tids]
         seg_boxes = {tid2cat.get(t, "object"): boxes[t] for t in active_tids}
@@ -172,6 +234,8 @@ def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
             "entities": seg_entities,
             "boxes": seg_boxes,
             "relations": seg_rels,
+            "depth": cat_depth,
+            "depth_edges": cat_edges,
         })
 
     if len(all_segs) < 3:
@@ -247,6 +311,9 @@ def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
                 continue  # skip if any active entity missing bbox
 
             quality = {f"{e}_det_score": round(rng.uniform(0.65, 0.97), 3) for e in active}
+            depth_filtered = {e: seg.get("depth", {}).get(e, 0.5) for e in active}
+            edges_filtered = [ed for ed in seg.get("depth_edges", [])
+                              if ed[0] in active and ed[1] in active]
 
             shots.append({
                 "shot_id": len(shots),  # reindex after skips
@@ -257,6 +324,8 @@ def parse_vidor_annotation(ann: dict, vidor_vid_id: str, rng,
                 "relations": [r for r in seg["relations"]
                                if r[0] in active and r[2] in active],
                 "boxes": seg_box_filtered,
+                "depth": depth_filtered,
+                "depth_edges": edges_filtered,
                 "quality": quality,
                 "keyframe_path": None,
             })

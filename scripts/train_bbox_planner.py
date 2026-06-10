@@ -15,7 +15,7 @@ from src.data.dataset import BBoxPlannerDataset
 from src.data.collate import collate_fn
 from src.model.bbox_planner import build_model
 from src.model.embeddings import CLIPTextEncoder
-from src.model.losses import masked_l1_loss, masked_iou_loss, overlap_loss, temporal_consistency_loss, compute_metrics
+from src.model.losses import masked_l1_loss, masked_iou_loss, overlap_loss, temporal_consistency_loss, compute_metrics, depth_ranking_loss
 from src.utils.box_ops import cxcywh_to_xyxy
 from src.utils.seed import set_seed
 from src.utils.logging import get_logger
@@ -106,8 +106,9 @@ def viz_epoch_sample(model, encoder, story_path, out_dir, epoch, device,
 
     shot_emb = encoder.encode_batch_shots(tensors["shot_prompts"], device)
     entity_emb = encoder.encode_batch_entities(tensors["entity_names"], device)
-    pred_boxes = model(shot_emb.float(), entity_emb.float(),
-                       tensors["state_ids"], tensors["presence"], tensors["relation_ids"])
+    pred_out = model(shot_emb.float(), entity_emb.float(),
+                     tensors["state_ids"], tensors["presence"], tensors["relation_ids"])
+    pred_boxes = pred_out[..., :4]
     pred_xyxy = cxcywh_to_xyxy(pred_boxes).clamp(0, 1)[0].cpu().numpy()  # [S,E,4]
     presence_np = tensors["presence"][0].cpu().numpy()
 
@@ -201,11 +202,31 @@ def encode_texts(encoder, shot_prompts_batch, entity_names_batch, device):
     return shot_emb, entity_emb
 
 
+def _depth_pair_accuracy(pred_depth, target_depth, presence, eps=0.05):
+    """Fraction of co-present, confidently-ordered pairs whose predicted depth
+    order matches the target order. None if no valid pairs in the batch."""
+    import torch
+    B, S, E = pred_depth.shape
+    if E < 2:
+        return None
+    dp = pred_depth.unsqueeze(-1) - pred_depth.unsqueeze(-2)
+    dt = target_depth.unsqueeze(-1) - target_depth.unsqueeze(-2)
+    both = presence.unsqueeze(-1) * presence.unsqueeze(-2)
+    iu = torch.triu(torch.ones(E, E, device=pred_depth.device), diagonal=1)
+    valid = both * (dt.abs() > eps).float() * iu
+    if valid.sum() < 1:
+        return None
+    correct = ((torch.sign(dp) == torch.sign(dt)).float() * valid).sum()
+    return (correct / valid.sum()).item()
+
+
 def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
     model.train()
     lambda_iou = cfg["loss"]["lambda_iou"]
     lambda_ov = cfg["loss"]["lambda_overlap"]
     lambda_temp = cfg["loss"]["lambda_temp"]
+    lambda_depth = cfg["loss"].get("lambda_depth", 0.0)
+    depth_margin = cfg["loss"].get("depth_margin", 0.1)
     overlap_tau = cfg["loss"]["overlap_tau"]
 
     total_loss = 0.0
@@ -215,6 +236,7 @@ def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
         state_ids = batch["state_ids"].to(device)
         relation_ids = batch["relation_ids"].to(device)
         target_cx = batch["target_boxes_cxcywh"].to(device)
+        target_depth = batch["target_depth"].to(device)
         target_mask = batch["target_mask"].to(device)
 
         shot_emb, entity_emb = encode_texts(
@@ -222,12 +244,15 @@ def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
         )
 
         with torch.cuda.amp.autocast(enabled=cfg["training"].get("mixed_precision", True)):
-            pred_boxes = model(shot_emb, entity_emb, state_ids, presence, relation_ids)
+            pred_out = model(shot_emb, entity_emb, state_ids, presence, relation_ids)
+            pred_boxes, pred_depth = pred_out[..., :4], pred_out[..., 4]
             l_box = masked_l1_loss(pred_boxes, target_cx, target_mask)
             l_iou = masked_iou_loss(pred_boxes, target_cx, target_mask)
             l_ov = overlap_loss(pred_boxes, presence, tau=overlap_tau)
             l_temp = temporal_consistency_loss(pred_boxes, state_ids, presence)
-            loss = l_box + lambda_iou * l_iou + lambda_ov * l_ov + lambda_temp * l_temp
+            l_depth = depth_ranking_loss(pred_depth, target_depth, presence, margin=depth_margin)
+            loss = (l_box + lambda_iou * l_iou + lambda_ov * l_ov
+                    + lambda_temp * l_temp + lambda_depth * l_depth)
 
         optimizer.zero_grad()
         scaler.scale(loss).backward()
@@ -248,9 +273,12 @@ def eval_epoch(model, encoder, loader, cfg, device):
     lambda_iou = cfg["loss"]["lambda_iou"]
     lambda_ov = cfg["loss"]["lambda_overlap"]
     lambda_temp = cfg["loss"]["lambda_temp"]
+    lambda_depth = cfg["loss"].get("lambda_depth", 0.0)
+    depth_margin = cfg["loss"].get("depth_margin", 0.1)
     overlap_tau = cfg["loss"]["overlap_tau"]
 
     all_metrics = {"l1": [], "iou": [], "giou": [], "center_err": [], "area_err": []}
+    depth_accs = []
     total_loss = 0.0
     n_batches = 0
 
@@ -259,29 +287,36 @@ def eval_epoch(model, encoder, loader, cfg, device):
         state_ids = batch["state_ids"].to(device)
         relation_ids = batch["relation_ids"].to(device)
         target_cx = batch["target_boxes_cxcywh"].to(device)
+        target_depth = batch["target_depth"].to(device)
         target_mask = batch["target_mask"].to(device)
 
         shot_emb, entity_emb = encode_texts(
             encoder, batch["shot_prompts"], batch["entity_names"], device
         )
         with torch.cuda.amp.autocast(enabled=False):
-            pred_boxes = model(shot_emb.float(), entity_emb.float(),
-                               state_ids, presence, relation_ids)
+            pred_out = model(shot_emb.float(), entity_emb.float(),
+                             state_ids, presence, relation_ids)
+            pred_boxes, pred_depth = pred_out[..., :4], pred_out[..., 4]
             l_box = masked_l1_loss(pred_boxes, target_cx, target_mask)
             l_iou = masked_iou_loss(pred_boxes, target_cx, target_mask)
             l_ov = overlap_loss(pred_boxes, presence, tau=overlap_tau)
             l_temp = temporal_consistency_loss(pred_boxes, state_ids, presence)
-            loss = l_box + lambda_iou * l_iou + lambda_ov * l_ov + lambda_temp * l_temp
+            l_depth = depth_ranking_loss(pred_depth, target_depth, presence, margin=depth_margin)
+            loss = (l_box + lambda_iou * l_iou + lambda_ov * l_ov
+                    + lambda_temp * l_temp + lambda_depth * l_depth)
 
         metrics = compute_metrics(pred_boxes, target_cx, target_mask)
         for k, v in metrics.items():
             all_metrics[k].append(v)
+        depth_accs.append(_depth_pair_accuracy(pred_depth, target_depth, presence))
 
         total_loss += loss.item()
         n_batches += 1
 
     avg = {k: sum(v) / len(v) for k, v in all_metrics.items() if v}
     avg["loss"] = total_loss / max(n_batches, 1)
+    dvals = [d for d in depth_accs if d is not None]
+    avg["depth_acc"] = sum(dvals) / len(dvals) if dvals else 0.0
     return avg
 
 
@@ -361,6 +396,7 @@ def main():
                 f"Epoch {epoch:3d} | train_loss={train_loss:.4f} | "
                 f"val_loss={val_metrics['loss']:.4f} | IoU={val_metrics['iou']:.4f} | "
                 f"GIoU={val_metrics['giou']:.4f} | L1={val_metrics['l1']:.4f} | "
+                f"depth_acc={val_metrics.get('depth_acc', 0):.3f} | "
                 f"dt={dt:.1f}s"
             )
             val_metrics["epoch"] = epoch

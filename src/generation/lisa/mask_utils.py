@@ -81,6 +81,37 @@ def create_entity_masks(
     return entity_masks, bg_mask
 
 
+def apply_depth_occlusion(
+    entity_masks: list[torch.Tensor],
+    depths: list[float],
+) -> tuple[list[torch.Tensor], torch.Tensor]:
+    """Resolve overlapping entity masks by occlusion order.
+
+    Higher depth = closer to camera = drawn in FRONT. Processing front-to-back,
+    each entity carves its mask out of every farther (lower-depth) entity, so the
+    front entity OWNS the shared region and the back one is partially occluded.
+    This keeps each pixel governed by a single entity's identity (no double IP
+    injection => no fusion), while preserving natural overlap. Returns the
+    occluded entity masks and a recomputed background mask.
+    """
+    n = len(entity_masks)
+    if n == 0:
+        h = w = 64
+        return entity_masks, torch.ones(h, w)
+    if n == 1:
+        return entity_masks, torch.clamp(1.0 - entity_masks[0], min=0.0)
+    if depths is None:
+        depths = [0.5] * n
+    order = sorted(range(n), key=lambda i: -float(depths[i]))  # front first
+    occupied = torch.zeros_like(entity_masks[0])
+    out = [None] * n
+    for i in order:
+        out[i] = torch.clamp(entity_masks[i] * (1.0 - occupied), min=0.0)
+        occupied = torch.maximum(occupied, entity_masks[i])
+    bg_mask = torch.clamp(1.0 - occupied, min=0.0)
+    return out, bg_mask
+
+
 def normalize_masks(
     entity_masks: list[torch.Tensor],
     bg_mask: torch.Tensor,

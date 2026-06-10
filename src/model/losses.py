@@ -57,6 +57,36 @@ def overlap_loss(pred_cxcywh: torch.Tensor, presence: torch.Tensor,
     return total_loss
 
 
+def depth_ranking_loss(pred_depth: torch.Tensor, target_depth: torch.Tensor,
+                       presence: torch.Tensor, margin: float = 0.1,
+                       eps: float = 0.05) -> torch.Tensor:
+    """Pairwise margin ranking on occlusion depth for co-present entities.
+
+    For each same-shot pair (i,j) with a confident target order
+    (|target_i - target_j| > eps), enforce the predicted order with a margin:
+        loss = max(0, margin - sign(t_i - t_j) * (p_i - p_j))
+    pred_depth, target_depth, presence: [B,S,E].
+    """
+    B, S, E = pred_depth.shape
+    if E < 2:
+        return torch.tensor(0.0, device=pred_depth.device)
+    pi = pred_depth.unsqueeze(-1)            # [B,S,E,1]
+    pj = pred_depth.unsqueeze(-2)            # [B,S,1,E]
+    ti = target_depth.unsqueeze(-1)
+    tj = target_depth.unsqueeze(-2)
+    dp = pi - pj                              # [B,S,E,E] predicted diff
+    dt = ti - tj                              # target diff
+    sign = torch.sign(dt)
+    both = presence.unsqueeze(-1) * presence.unsqueeze(-2)   # [B,S,E,E]
+    # only ordered pairs (skip ties / near-equal targets), upper triangle to avoid double count
+    iu = torch.triu(torch.ones(E, E, device=pred_depth.device), diagonal=1)
+    valid = both * (dt.abs() > eps).float() * iu
+    if valid.sum() < 1:
+        return torch.tensor(0.0, device=pred_depth.device)
+    loss = torch.clamp(margin - sign * dp, min=0.0)
+    return (loss * valid).sum() / (valid.sum() + 1e-6)
+
+
 def temporal_consistency_loss(pred_cxcywh: torch.Tensor, state_ids: torch.Tensor,
                               presence: torch.Tensor) -> torch.Tensor:
     """

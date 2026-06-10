@@ -48,7 +48,7 @@ def run_eval(model, encoder, loader, device):
             entity_emb = encoder.encode_batch_entities(batch["entity_names"], device)
 
         pred_boxes = model(shot_emb.float(), entity_emb.float(),
-                           state_ids, presence, relation_ids)
+                           state_ids, presence, relation_ids)[..., :4]
 
         metrics = compute_metrics(pred_boxes, target_cx, target_mask)
         for k, v in metrics.items():

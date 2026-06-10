@@ -76,6 +76,50 @@ def enforce_gap(boxes: dict, gap: float = 0.12, shrink: float = 0.9):
     return out
 
 
+def _pair_iou(a, b):
+    ix1, iy1 = max(a[0], b[0]), max(a[1], b[1])
+    ix2, iy2 = min(a[2], b[2]), min(a[3], b[3])
+    inter = max(0, ix2 - ix1) * max(0, iy2 - iy1)
+    ua = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - inter
+    return inter / (ua + 1e-9)
+
+
+def resolve_for_occlusion(boxes: dict, depths: dict,
+                          target_iou: float = 0.18, overlap_frac: float = 0.22):
+    """Arrange co-present entities side-by-side with a PARTIAL horizontal overlap
+    seam, ordered left->right by predicted center. Each entity keeps its own
+    visible region (so neither goes missing) while the boxes still share a seam
+    where depth-ordered occlusion decides front/back (so they don't fuse).
+
+    Box sizes (widths/heights) are preserved from the planner; only horizontal
+    positions are set so adjacent boxes overlap by ~overlap_frac of the narrower
+    box. Two-entity case is handled exactly; >2 entities are chained.
+    """
+    keys = list(boxes)
+    if len(keys) < 2:
+        return boxes
+    # order by predicted center x (keep planner's left/right intent)
+    order = sorted(keys, key=lambda e: (boxes[e][0] + boxes[e][2]) / 2)
+    ws = {e: boxes[e][2] - boxes[e][0] for e in order}
+    # total span = sum widths - overlaps between consecutive boxes
+    ov = [overlap_frac * min(ws[order[i]], ws[order[i + 1]]) for i in range(len(order) - 1)]
+    span = sum(ws.values()) - sum(ov)
+    if span > 1.0:  # too wide -> scale all widths down to fit with the seams
+        s = 1.0 / span
+        ws = {e: ws[e] * s for e in order}
+        ov = [o * s for o in ov]
+        span = 1.0
+    x = (1.0 - span) / 2.0                       # center the group
+    out = {}
+    for i, e in enumerate(order):
+        b = boxes[e]
+        w, h = ws[e], b[3] - b[1]
+        y1 = max(0.0, min(1 - h, b[1]))
+        out[e] = [round(x, 4), round(y1, 4), round(x + w, 4), round(y1 + h, 4)]
+        x += w - (ov[i] if i < len(ov) else 0.0)
+    return out
+
+
 def plan_boxes(model, encoder, story, device):
     """Run the trained planner -> per-shot per-entity predicted xyxy boxes."""
     entities = [e["name"] for e in story["entities"]]
@@ -103,30 +147,37 @@ def plan_boxes(model, encoder, story, device):
                    torch.from_numpy(state_ids).unsqueeze(0).to(device),
                    torch.from_numpy(presence).unsqueeze(0).to(device),
                    torch.from_numpy(relation_ids).unsqueeze(0).to(device))
-        xyxy = cxcywh_to_xyxy(pb).clamp(0, 1)[0].cpu().numpy()  # [S,E,4]
-    # per shot: {entity: [x1,y1,x2,y2]} for present entities
-    out = []
+        xyxy = cxcywh_to_xyxy(pb[..., :4]).clamp(0, 1)[0].cpu().numpy()  # [S,E,4]
+        depth = pb[0, ..., 4].cpu().numpy()                              # [S,E] occlusion depth
+    # per shot: {entity: [x1,y1,x2,y2]} and {entity: depth} for present entities
+    out, out_depth = [], []
     for s in range(S):
-        boxes = {entities[ei]: xyxy[s, ei].tolist()
-                 for ei in range(E) if P[s, ei] == 1}
-        out.append(boxes)
-    return entities, out
+        present = [ei for ei in range(E) if P[s, ei] == 1]
+        out.append({entities[ei]: xyxy[s, ei].tolist() for ei in present})
+        out_depth.append({entities[ei]: float(depth[s, ei]) for ei in present})
+    return entities, out, out_depth
 
 
-def draw_bbox_debug(entities, per_shot_boxes, save_path, title):
+def draw_bbox_debug(entities, per_shot_boxes, save_path, title, per_shot_depth=None):
     S = len(per_shot_boxes)
     fig, axes = plt.subplots(1, S, figsize=(4 * S, 4))
     if S == 1: axes = [axes]
     ecolor = {e: COLORS[i % len(COLORS)] for i, e in enumerate(entities)}
     for s, (ax, boxes) in enumerate(zip(axes, per_shot_boxes)):
+        depths = (per_shot_depth[s] if per_shot_depth else {})
         ax.set_xlim(0, 1); ax.set_ylim(1, 0); ax.set_aspect("equal")
         ax.set_title(f"shot{s}  ({'+'.join(boxes.keys()) or 'none'})", fontsize=9)
         ax.set_xticks([0, .5, 1]); ax.set_yticks([0, .5, 1])
-        for e, b in boxes.items():
-            x1, y1, x2, y2 = b
+        # draw back-to-front so the front (higher depth) box sits on top
+        order = sorted(boxes.keys(), key=lambda e: depths.get(e, 0.5))
+        for e in order:
+            x1, y1, x2, y2 = boxes[e]
+            d = depths.get(e, 0.5)
+            lw = 1.8 + 2.4 * d                       # front = thicker
             ax.add_patch(mpatches.Rectangle((x1, y1), x2 - x1, y2 - y1,
-                         fill=False, edgecolor=ecolor[e], linewidth=2.5))
-            ax.text(x1 + 0.01, y1 + 0.05, e, color=ecolor[e], fontsize=8, weight="bold")
+                         fill=False, edgecolor=ecolor[e], linewidth=lw, zorder=2 + d))
+            tag = f"{e} d={d:.2f}" + (" (front)" if d == max(depths.values(), default=0) and len(boxes) > 1 else "")
+            ax.text(x1 + 0.01, y1 + 0.05, tag, color=ecolor[e], fontsize=7.5, weight="bold", zorder=5)
     fig.suptitle(title, fontsize=10)
     fig.tight_layout()
     fig.savefig(save_path, dpi=80); plt.close(fig)
@@ -157,10 +208,10 @@ def main():
     # --- planner pass for all stories (+ debug viz) ---
     planned = []
     for st in stories:
-        entities, per_shot = plan_boxes(model, encoder, st, dev)
+        entities, per_shot, per_depth = plan_boxes(model, encoder, st, dev)
         sdir = out / st["name"]; sdir.mkdir(parents=True, exist_ok=True)
-        draw_bbox_debug(entities, per_shot, sdir / "bbox_debug.png", st["name"])
-        planned.append((st, entities, per_shot))
+        draw_bbox_debug(entities, per_shot, sdir / "bbox_debug.png", st["name"], per_depth)
+        planned.append((st, entities, per_shot, per_depth))
     del model, encoder; gc.collect(); torch.cuda.empty_cache()
     print(f"[planner] predicted boxes + debug viz for {len(planned)} stories")
 
@@ -175,7 +226,7 @@ def main():
         config["models"]["sdxl"], torch_dtype=torch.float16, variant="fp16",
         use_safetensors=True).to("cuda:0"); bp.vae.enable_slicing()
     anchor_banks = {}
-    for st, entities, _ in planned:
+    for st, entities, _, _ in planned:
         sdir = out / st["name"]
         cfg = {**config, "anchors": {**config["anchors"], "save_dir": str(sdir / "anchor_bank")}}
         anchor_banks[st["name"]] = build_all_anchors(
@@ -186,23 +237,23 @@ def main():
     print("[LISA] generating shots...")
     lisa = LISAPipeline(config); lisa.load_models()
     L = config["layout"]["latent_size"]
-    for st, entities, per_shot in planned:
+    for st, entities, per_shot, per_depth in planned:
         sdir = out / st["name"]
-        # build a layout_plan with PREDICTED boxes (xyxy norm -> latent)
+        # build a layout_plan with PREDICTED boxes (xyxy norm -> latent).
+        # We KEEP the planner's overlap (data has ~60% co-present overlap) and
+        # resolve it at generation via depth-ordered occlusion (front entity owns
+        # the shared region) instead of pushing boxes apart. Only extreme stacking
+        # (near-identical boxes) is lightly separated so the back stays visible.
         shots_lp = []
         for s, boxes in enumerate(per_shot):
-            # safeguard: separate overlapping predicted boxes before LISA, then
-            # enforce a background gap so large same-body-plan entities (quadrupeds,
-            # vehicles) don't bridge across touching boxes into one fused body.
+            depths = per_depth[s]
             if len(boxes) > 1:
-                # gap-separated slots: each entity gets its own clear region so
-                # neither fuses NOR gets suppressed/missing (both entities present)
-                boxes = enforce_gap(deoverlap_boxes(dict(boxes)))
+                boxes = resolve_for_occlusion(dict(boxes), depths)
             ents = []
             for e, b in boxes.items():
                 cx = (b[0] + b[2]) / 2
                 pos = "left" if cx < 0.4 else ("right" if cx > 0.6 else "center")
-                ents.append({"name": e, "position": pos,
+                ents.append({"name": e, "position": pos, "depth": float(depths.get(e, 0.5)),
                              "bbox": [int(b[0]*L), int(b[1]*L), int(b[2]*L), int(b[3]*L)]})
             shots_lp.append({"shot_index": s, "description": st["shots"][s]["prompt"], "entities": ents})
         layout_plan = {"entity_definitions": st["entities"],
