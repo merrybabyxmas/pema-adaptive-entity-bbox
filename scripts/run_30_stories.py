@@ -31,10 +31,9 @@ from src.model.bbox_planner import build_model
 from src.model.embeddings import CLIPTextEncoder
 from src.lm_planner.validator import build_presence_matrix, compute_states
 from src.data.schema import STATE2ID
-from src.utils.box_ops import cxcywh_to_xyxy
+from src.utils.box_ops import cxcywh_to_xyxy, deoverlap_boxes
 from src.generation.lisa.build_anchors import build_all_anchors
 from src.generation.lisa.lisa_pipeline import LISAPipeline
-from src.generation.pema_pipeline import deoverlap_boxes
 
 COLORS = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6"]
 MAXS, MAXE = 5, 5
@@ -46,23 +45,34 @@ def adaptive(n):
     return 8.0, 0.8
 
 
-def enforce_gap(boxes: dict, gap: float = 0.12, shrink: float = 0.85):
+def enforce_gap(boxes: dict, gap: float = 0.12, shrink: float = 0.9):
     """Push horizontally-ordered boxes apart so there is a background strip
     between them — prevents large same-body-plan entities (quadrupeds, vehicles)
-    from bridging across touching boxes into one fused body. Boxes are xyxy [0,1]."""
+    from bridging across touching boxes into one fused body. Boxes are xyxy [0,1].
+
+    Slots are allocated PROPORTIONAL to each entity's predicted box width (not
+    equal), so the planner's learned relative size survives — a duck keeps a
+    narrower slot than an elephant. Vertical extent is left as predicted (the
+    planner's height already carries size). 'Go by what's learned.'"""
     if len(boxes) < 2:
         return boxes
     items = sorted(boxes.items(), key=lambda kv: (kv[1][0] + kv[1][2]) / 2)
     n = len(items)
-    slot = (1.0 - gap * (n - 1)) / n          # equal slots with gaps between
+    widths = [max(1e-3, (b[2] - b[0]) * shrink) for _, b in items]
+    total = sum(widths) + gap * (n - 1)
+    # only scale DOWN if the learned widths + gaps overflow the row; otherwise
+    # keep the planner's predicted absolute widths (a duck stays duck-sized).
+    if total > 1.0:
+        s = 1.0 / total
+        widths = [w * s for w in widths]
+        gap = gap * s
+        total = 1.0
+    x = (1.0 - total) / 2.0                              # center the group
     out = {}
-    for i, (e, b) in enumerate(items):
-        x1 = i * (slot + gap)
-        x2 = x1 + slot
-        # shrink toward slot center a touch, keep original vertical extent
-        w = (x2 - x1) * shrink
-        cx = (x1 + x2) / 2
+    for (e, b), w in zip(items, widths):
+        cx = x + w / 2
         out[e] = [round(cx - w / 2, 4), b[1], round(cx + w / 2, 4), b[3]]
+        x += w + gap
     return out
 
 
@@ -185,7 +195,9 @@ def main():
             # enforce a background gap so large same-body-plan entities (quadrupeds,
             # vehicles) don't bridge across touching boxes into one fused body.
             if len(boxes) > 1:
-                boxes = deoverlap_boxes(dict(boxes))   # learned layout; no gap hack
+                # gap-separated slots: each entity gets its own clear region so
+                # neither fuses NOR gets suppressed/missing (both entities present)
+                boxes = enforce_gap(deoverlap_boxes(dict(boxes)))
             ents = []
             for e, b in boxes.items():
                 cx = (b[0] + b[2]) / 2

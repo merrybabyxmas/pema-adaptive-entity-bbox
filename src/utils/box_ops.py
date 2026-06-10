@@ -121,3 +121,70 @@ def clamp_boxes(boxes, min_val=0.0, max_val=1.0):
 def box_center(box):
     """xyxy -> (cx, cy)"""
     return ((box[0] + box[2]) / 2, (box[1] + box[3]) / 2)
+
+
+def deoverlap_boxes(boxes_dict: dict, max_iter: int = 30) -> dict:
+    """
+    Iteratively push overlapping bboxes apart until they no longer overlap.
+    Moves boxes along the axis of smallest penetration depth.
+    boxes_dict: {entity_name: [x1,y1,x2,y2]} normalized [0,1]
+    """
+    names = list(boxes_dict.keys())
+    if len(names) < 2:
+        return boxes_dict
+
+    boxes = [list(boxes_dict[n]) for n in names]
+
+    for _ in range(max_iter):
+        moved = False
+        for i in range(len(boxes)):
+            for j in range(i + 1, len(boxes)):
+                b1, b2 = boxes[i], boxes[j]
+                ox1 = max(b1[0], b2[0])
+                oy1 = max(b1[1], b2[1])
+                ox2 = min(b1[2], b2[2])
+                oy2 = min(b1[3], b2[3])
+                if ox2 <= ox1 or oy2 <= oy1:
+                    continue  # no overlap
+
+                ov_w = ox2 - ox1
+                ov_h = oy2 - oy1
+                push = 0.02  # extra gap after separation
+
+                if ov_w <= ov_h:
+                    # push horizontally (smaller penetration axis)
+                    c1x = (b1[0] + b1[2]) / 2
+                    c2x = (b2[0] + b2[2]) / 2
+                    half = ov_w / 2 + push
+                    if c1x <= c2x:
+                        boxes[i][0] -= half; boxes[i][2] -= half
+                        boxes[j][0] += half; boxes[j][2] += half
+                    else:
+                        boxes[i][0] += half; boxes[i][2] += half
+                        boxes[j][0] -= half; boxes[j][2] -= half
+                else:
+                    # push vertically
+                    c1y = (b1[1] + b1[3]) / 2
+                    c2y = (b2[1] + b2[3]) / 2
+                    half = ov_h / 2 + push
+                    if c1y <= c2y:
+                        boxes[i][1] -= half; boxes[i][3] -= half
+                        boxes[j][1] += half; boxes[j][3] += half
+                    else:
+                        boxes[i][1] += half; boxes[i][3] += half
+                        boxes[j][1] -= half; boxes[j][3] -= half
+                moved = True
+
+        if not moved:
+            break
+
+    # clamp to valid image range
+    for b in boxes:
+        w = b[2] - b[0]
+        h = b[3] - b[1]
+        b[0] = max(0.02, min(0.98 - w, b[0]))
+        b[2] = b[0] + w
+        b[1] = max(0.02, min(0.98 - h, b[1]))
+        b[3] = b[1] + h
+
+    return {names[i]: boxes[i] for i in range(len(names))}

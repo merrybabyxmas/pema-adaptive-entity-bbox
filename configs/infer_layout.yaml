@@ -1,3 +1,0 @@
-checkpoint: outputs/runs/bbox_planner_v1/checkpoints/best.pt
-input: examples/user_story_001.json
-output: outputs/eval/user_story_001_boxes.json
