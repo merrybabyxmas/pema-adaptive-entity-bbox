@@ -1,0 +1,32 @@
+# LISA (image) config — ported into adaptive_entity_bbox
+models:
+  sdxl: "stabilityai/stable-diffusion-xl-base-1.0"
+  ip_adapter:
+    repo: "h94/IP-Adapter"
+    subfolder: "sdxl_models"
+    weight_name: "ip-adapter_sdxl_vit-h.safetensors"
+    image_encoder: "models/image_encoder"
+
+generation:
+  height: 1024
+  width: 1024
+  num_inference_steps: 30
+  guidance_scale: 7.5
+  seed: 42
+  dtype: "float16"
+  device: "cuda:0"
+
+anchors:
+  entity_prompt_suffix: "on a plain white background, centered, full body, high quality"
+  background_num_inference_steps: 30
+  save_dir: "outputs/lisa/anchor_bank"
+
+layout:
+  latent_size: 128       # 1024/8
+  mask_sigma: 20.0
+
+conditioning:
+  ip_adapter_scale: 0.6
+
+evaluation:
+  output_dir: "outputs/lisa"
