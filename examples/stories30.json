@@ -1,0 +1,1064 @@
+[
+  {
+    "name": "story_00_dalmatian_cat",
+    "entities": [
+      {
+        "name": "dalmatian",
+        "prompt": "a dalmatian dog with black spots"
+      },
+      {
+        "name": "cat",
+        "prompt": "a black and white tuxedo cat"
+      }
+    ],
+    "background": "in a sunny park",
+    "shots": [
+      {
+        "prompt": "a dalmatian dog with black spots and a black and white tuxedo cat in a sunny park",
+        "present": [
+          "dalmatian",
+          "cat"
+        ]
+      },
+      {
+        "prompt": "a black and white tuxedo cat in a sunny park",
+        "present": [
+          "cat"
+        ]
+      },
+      {
+        "prompt": "a dalmatian dog with black spots and a black and white tuxedo cat in a sunny park",
+        "present": [
+          "dalmatian",
+          "cat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_01_retriever_tabby",
+    "entities": [
+      {
+        "name": "retriever",
+        "prompt": "a golden retriever dog"
+      },
+      {
+        "name": "tabby",
+        "prompt": "an orange tabby cat"
+      }
+    ],
+    "background": "on a city street",
+    "shots": [
+      {
+        "prompt": "a golden retriever dog on a city street",
+        "present": [
+          "retriever"
+        ]
+      },
+      {
+        "prompt": "a golden retriever dog and an orange tabby cat on a city street",
+        "present": [
+          "retriever",
+          "tabby"
+        ]
+      },
+      {
+        "prompt": "an orange tabby cat on a city street",
+        "present": [
+          "tabby"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_02_panda_redpanda",
+    "entities": [
+      {
+        "name": "panda",
+        "prompt": "a giant panda"
+      },
+      {
+        "name": "redpanda",
+        "prompt": "a red panda"
+      }
+    ],
+    "background": "in a green meadow",
+    "shots": [
+      {
+        "prompt": "a giant panda and a red panda in a green meadow",
+        "present": [
+          "panda",
+          "redpanda"
+        ]
+      },
+      {
+        "prompt": "a giant panda in a green meadow",
+        "present": [
+          "panda"
+        ]
+      },
+      {
+        "prompt": "a giant panda and a red panda in a green meadow",
+        "present": [
+          "panda",
+          "redpanda"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_03_zebra_elephant",
+    "entities": [
+      {
+        "name": "zebra",
+        "prompt": "a zebra with black and white stripes"
+      },
+      {
+        "name": "elephant",
+        "prompt": "a grey elephant"
+      }
+    ],
+    "background": "on a sandy beach",
+    "shots": [
+      {
+        "prompt": "a zebra with black and white stripes on a sandy beach",
+        "present": [
+          "zebra"
+        ]
+      },
+      {
+        "prompt": "a grey elephant on a sandy beach",
+        "present": [
+          "elephant"
+        ]
+      },
+      {
+        "prompt": "a zebra with black and white stripes and a grey elephant on a sandy beach",
+        "present": [
+          "zebra",
+          "elephant"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_04_penguin_polarbear",
+    "entities": [
+      {
+        "name": "penguin",
+        "prompt": "a black and white penguin"
+      },
+      {
+        "name": "polarbear",
+        "prompt": "a white polar bear"
+      }
+    ],
+    "background": "in a cozy living room",
+    "shots": [
+      {
+        "prompt": "a black and white penguin and a white polar bear in a cozy living room",
+        "present": [
+          "penguin",
+          "polarbear"
+        ]
+      },
+      {
+        "prompt": "a white polar bear in a cozy living room",
+        "present": [
+          "polarbear"
+        ]
+      },
+      {
+        "prompt": "a black and white penguin in a cozy living room",
+        "present": [
+          "penguin"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_05_parrot_flamingo",
+    "entities": [
+      {
+        "name": "parrot",
+        "prompt": "a colorful green parrot"
+      },
+      {
+        "name": "flamingo",
+        "prompt": "a pink flamingo"
+      }
+    ],
+    "background": "in a snowy field",
+    "shots": [
+      {
+        "prompt": "a colorful green parrot and a pink flamingo in a snowy field",
+        "present": [
+          "parrot",
+          "flamingo"
+        ]
+      },
+      {
+        "prompt": "a pink flamingo in a snowy field",
+        "present": [
+          "flamingo"
+        ]
+      },
+      {
+        "prompt": "a colorful green parrot and a pink flamingo in a snowy field",
+        "present": [
+          "parrot",
+          "flamingo"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_06_teddy_robot",
+    "entities": [
+      {
+        "name": "teddy",
+        "prompt": "a brown teddy bear"
+      },
+      {
+        "name": "robot",
+        "prompt": "a silver toy robot"
+      }
+    ],
+    "background": "in a forest clearing",
+    "shots": [
+      {
+        "prompt": "a brown teddy bear in a forest clearing",
+        "present": [
+          "teddy"
+        ]
+      },
+      {
+        "prompt": "a brown teddy bear and a silver toy robot in a forest clearing",
+        "present": [
+          "teddy",
+          "robot"
+        ]
+      },
+      {
+        "prompt": "a silver toy robot in a forest clearing",
+        "present": [
+          "robot"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_07_redcar_bus",
+    "entities": [
+      {
+        "name": "redcar",
+        "prompt": "a red sports car"
+      },
+      {
+        "name": "bus",
+        "prompt": "a yellow school bus"
+      }
+    ],
+    "background": "in a modern studio",
+    "shots": [
+      {
+        "prompt": "a red sports car and a yellow school bus in a modern studio",
+        "present": [
+          "redcar",
+          "bus"
+        ]
+      },
+      {
+        "prompt": "a red sports car in a modern studio",
+        "present": [
+          "redcar"
+        ]
+      },
+      {
+        "prompt": "a red sports car and a yellow school bus in a modern studio",
+        "present": [
+          "redcar",
+          "bus"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_08_horse_sheep",
+    "entities": [
+      {
+        "name": "horse",
+        "prompt": "a brown horse"
+      },
+      {
+        "name": "sheep",
+        "prompt": "a fluffy white sheep"
+      }
+    ],
+    "background": "in a sunny park",
+    "shots": [
+      {
+        "prompt": "a brown horse in a sunny park",
+        "present": [
+          "horse"
+        ]
+      },
+      {
+        "prompt": "a fluffy white sheep in a sunny park",
+        "present": [
+          "sheep"
+        ]
+      },
+      {
+        "prompt": "a brown horse and a fluffy white sheep in a sunny park",
+        "present": [
+          "horse",
+          "sheep"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_09_tiger_giraffe",
+    "entities": [
+      {
+        "name": "tiger",
+        "prompt": "an orange tiger with stripes"
+      },
+      {
+        "name": "giraffe",
+        "prompt": "a tall giraffe"
+      }
+    ],
+    "background": "on a city street",
+    "shots": [
+      {
+        "prompt": "an orange tiger with stripes and a tall giraffe on a city street",
+        "present": [
+          "tiger",
+          "giraffe"
+        ]
+      },
+      {
+        "prompt": "a tall giraffe on a city street",
+        "present": [
+          "giraffe"
+        ]
+      },
+      {
+        "prompt": "an orange tiger with stripes on a city street",
+        "present": [
+          "tiger"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_10_peacock_swan",
+    "entities": [
+      {
+        "name": "peacock",
+        "prompt": "a peacock with colorful tail"
+      },
+      {
+        "name": "swan",
+        "prompt": "a white swan"
+      }
+    ],
+    "background": "in a green meadow",
+    "shots": [
+      {
+        "prompt": "a peacock with colorful tail and a white swan in a green meadow",
+        "present": [
+          "peacock",
+          "swan"
+        ]
+      },
+      {
+        "prompt": "a white swan in a green meadow",
+        "present": [
+          "swan"
+        ]
+      },
+      {
+        "prompt": "a peacock with colorful tail and a white swan in a green meadow",
+        "present": [
+          "peacock",
+          "swan"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_11_fox_rabbit",
+    "entities": [
+      {
+        "name": "fox",
+        "prompt": "a red fox"
+      },
+      {
+        "name": "rabbit",
+        "prompt": "a white rabbit"
+      }
+    ],
+    "background": "on a sandy beach",
+    "shots": [
+      {
+        "prompt": "a red fox on a sandy beach",
+        "present": [
+          "fox"
+        ]
+      },
+      {
+        "prompt": "a red fox and a white rabbit on a sandy beach",
+        "present": [
+          "fox",
+          "rabbit"
+        ]
+      },
+      {
+        "prompt": "a white rabbit on a sandy beach",
+        "present": [
+          "rabbit"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_12_koala_kangaroo",
+    "entities": [
+      {
+        "name": "koala",
+        "prompt": "a grey koala"
+      },
+      {
+        "name": "kangaroo",
+        "prompt": "a brown kangaroo"
+      }
+    ],
+    "background": "in a cozy living room",
+    "shots": [
+      {
+        "prompt": "a grey koala and a brown kangaroo in a cozy living room",
+        "present": [
+          "koala",
+          "kangaroo"
+        ]
+      },
+      {
+        "prompt": "a grey koala in a cozy living room",
+        "present": [
+          "koala"
+        ]
+      },
+      {
+        "prompt": "a grey koala and a brown kangaroo in a cozy living room",
+        "present": [
+          "koala",
+          "kangaroo"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_13_owl_crow",
+    "entities": [
+      {
+        "name": "owl",
+        "prompt": "a brown owl"
+      },
+      {
+        "name": "crow",
+        "prompt": "a black crow"
+      }
+    ],
+    "background": "in a snowy field",
+    "shots": [
+      {
+        "prompt": "a brown owl in a snowy field",
+        "present": [
+          "owl"
+        ]
+      },
+      {
+        "prompt": "a black crow in a snowy field",
+        "present": [
+          "crow"
+        ]
+      },
+      {
+        "prompt": "a brown owl and a black crow in a snowy field",
+        "present": [
+          "owl",
+          "crow"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_14_snowman_reindeer",
+    "entities": [
+      {
+        "name": "snowman",
+        "prompt": "a snowman with a carrot nose"
+      },
+      {
+        "name": "reindeer",
+        "prompt": "a brown reindeer"
+      }
+    ],
+    "background": "in a forest clearing",
+    "shots": [
+      {
+        "prompt": "a snowman with a carrot nose and a brown reindeer in a forest clearing",
+        "present": [
+          "snowman",
+          "reindeer"
+        ]
+      },
+      {
+        "prompt": "a brown reindeer in a forest clearing",
+        "present": [
+          "reindeer"
+        ]
+      },
+      {
+        "prompt": "a snowman with a carrot nose in a forest clearing",
+        "present": [
+          "snowman"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_15_astronaut_alien",
+    "entities": [
+      {
+        "name": "astronaut",
+        "prompt": "an astronaut in a white spacesuit"
+      },
+      {
+        "name": "alien",
+        "prompt": "a small green alien"
+      }
+    ],
+    "background": "in a modern studio",
+    "shots": [
+      {
+        "prompt": "an astronaut in a white spacesuit and a small green alien in a modern studio",
+        "present": [
+          "astronaut",
+          "alien"
+        ]
+      },
+      {
+        "prompt": "a small green alien in a modern studio",
+        "present": [
+          "alien"
+        ]
+      },
+      {
+        "prompt": "an astronaut in a white spacesuit and a small green alien in a modern studio",
+        "present": [
+          "astronaut",
+          "alien"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_16_knight_wizard",
+    "entities": [
+      {
+        "name": "knight",
+        "prompt": "a knight in shining armor"
+      },
+      {
+        "name": "wizard",
+        "prompt": "a wizard in a blue robe"
+      }
+    ],
+    "background": "in a sunny park",
+    "shots": [
+      {
+        "prompt": "a knight in shining armor in a sunny park",
+        "present": [
+          "knight"
+        ]
+      },
+      {
+        "prompt": "a knight in shining armor and a wizard in a blue robe in a sunny park",
+        "present": [
+          "knight",
+          "wizard"
+        ]
+      },
+      {
+        "prompt": "a wizard in a blue robe in a sunny park",
+        "present": [
+          "wizard"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_17_pirate_mermaid",
+    "entities": [
+      {
+        "name": "pirate",
+        "prompt": "a pirate with a hat"
+      },
+      {
+        "name": "mermaid",
+        "prompt": "a mermaid with a green tail"
+      }
+    ],
+    "background": "on a city street",
+    "shots": [
+      {
+        "prompt": "a pirate with a hat and a mermaid with a green tail on a city street",
+        "present": [
+          "pirate",
+          "mermaid"
+        ]
+      },
+      {
+        "prompt": "a pirate with a hat on a city street",
+        "present": [
+          "pirate"
+        ]
+      },
+      {
+        "prompt": "a pirate with a hat and a mermaid with a green tail on a city street",
+        "present": [
+          "pirate",
+          "mermaid"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_18_cowboy_brownhorse",
+    "entities": [
+      {
+        "name": "cowboy",
+        "prompt": "a cowboy with a hat"
+      },
+      {
+        "name": "brownhorse",
+        "prompt": "a brown horse"
+      }
+    ],
+    "background": "in a green meadow",
+    "shots": [
+      {
+        "prompt": "a cowboy with a hat in a green meadow",
+        "present": [
+          "cowboy"
+        ]
+      },
+      {
+        "prompt": "a brown horse in a green meadow",
+        "present": [
+          "brownhorse"
+        ]
+      },
+      {
+        "prompt": "a cowboy with a hat and a brown horse in a green meadow",
+        "present": [
+          "cowboy",
+          "brownhorse"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_19_firefighter_dalmatian2",
+    "entities": [
+      {
+        "name": "firefighter",
+        "prompt": "a firefighter in a red uniform"
+      },
+      {
+        "name": "dalmatian2",
+        "prompt": "a dalmatian dog"
+      }
+    ],
+    "background": "on a sandy beach",
+    "shots": [
+      {
+        "prompt": "a firefighter in a red uniform and a dalmatian dog on a sandy beach",
+        "present": [
+          "firefighter",
+          "dalmatian2"
+        ]
+      },
+      {
+        "prompt": "a dalmatian dog on a sandy beach",
+        "present": [
+          "dalmatian2"
+        ]
+      },
+      {
+        "prompt": "a firefighter in a red uniform on a sandy beach",
+        "present": [
+          "firefighter"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_20_lion_gazelle",
+    "entities": [
+      {
+        "name": "lion",
+        "prompt": "a lion with a golden mane"
+      },
+      {
+        "name": "gazelle",
+        "prompt": "a brown gazelle"
+      }
+    ],
+    "background": "in a cozy living room",
+    "shots": [
+      {
+        "prompt": "a lion with a golden mane and a brown gazelle in a cozy living room",
+        "present": [
+          "lion",
+          "gazelle"
+        ]
+      },
+      {
+        "prompt": "a brown gazelle in a cozy living room",
+        "present": [
+          "gazelle"
+        ]
+      },
+      {
+        "prompt": "a lion with a golden mane and a brown gazelle in a cozy living room",
+        "present": [
+          "lion",
+          "gazelle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_21_hippo_crocodile",
+    "entities": [
+      {
+        "name": "hippo",
+        "prompt": "a grey hippo"
+      },
+      {
+        "name": "crocodile",
+        "prompt": "a green crocodile"
+      }
+    ],
+    "background": "in a snowy field",
+    "shots": [
+      {
+        "prompt": "a grey hippo in a snowy field",
+        "present": [
+          "hippo"
+        ]
+      },
+      {
+        "prompt": "a grey hippo and a green crocodile in a snowy field",
+        "present": [
+          "hippo",
+          "crocodile"
+        ]
+      },
+      {
+        "prompt": "a green crocodile in a snowy field",
+        "present": [
+          "crocodile"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_22_sloth_toucan",
+    "entities": [
+      {
+        "name": "sloth",
+        "prompt": "a brown sloth"
+      },
+      {
+        "name": "toucan",
+        "prompt": "a toucan with a colorful beak"
+      }
+    ],
+    "background": "in a forest clearing",
+    "shots": [
+      {
+        "prompt": "a brown sloth and a toucan with a colorful beak in a forest clearing",
+        "present": [
+          "sloth",
+          "toucan"
+        ]
+      },
+      {
+        "prompt": "a brown sloth in a forest clearing",
+        "present": [
+          "sloth"
+        ]
+      },
+      {
+        "prompt": "a brown sloth and a toucan with a colorful beak in a forest clearing",
+        "present": [
+          "sloth",
+          "toucan"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_23_husky_siamese",
+    "entities": [
+      {
+        "name": "husky",
+        "prompt": "a husky dog with blue eyes"
+      },
+      {
+        "name": "siamese",
+        "prompt": "a siamese cat"
+      }
+    ],
+    "background": "in a modern studio",
+    "shots": [
+      {
+        "prompt": "a husky dog with blue eyes in a modern studio",
+        "present": [
+          "husky"
+        ]
+      },
+      {
+        "prompt": "a siamese cat in a modern studio",
+        "present": [
+          "siamese"
+        ]
+      },
+      {
+        "prompt": "a husky dog with blue eyes and a siamese cat in a modern studio",
+        "present": [
+          "husky",
+          "siamese"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_24_bicycle_scooter",
+    "entities": [
+      {
+        "name": "bicycle",
+        "prompt": "a vintage red bicycle"
+      },
+      {
+        "name": "scooter",
+        "prompt": "a blue scooter"
+      }
+    ],
+    "background": "in a sunny park",
+    "shots": [
+      {
+        "prompt": "a vintage red bicycle and a blue scooter in a sunny park",
+        "present": [
+          "bicycle",
+          "scooter"
+        ]
+      },
+      {
+        "prompt": "a blue scooter in a sunny park",
+        "present": [
+          "scooter"
+        ]
+      },
+      {
+        "prompt": "a vintage red bicycle in a sunny park",
+        "present": [
+          "bicycle"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_25_monkey_parrot2",
+    "entities": [
+      {
+        "name": "monkey",
+        "prompt": "a brown monkey"
+      },
+      {
+        "name": "parrot2",
+        "prompt": "a green parrot"
+      }
+    ],
+    "background": "on a city street",
+    "shots": [
+      {
+        "prompt": "a brown monkey and a green parrot on a city street",
+        "present": [
+          "monkey",
+          "parrot2"
+        ]
+      },
+      {
+        "prompt": "a green parrot on a city street",
+        "present": [
+          "parrot2"
+        ]
+      },
+      {
+        "prompt": "a brown monkey and a green parrot on a city street",
+        "present": [
+          "monkey",
+          "parrot2"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_26_corgi_blackcat",
+    "entities": [
+      {
+        "name": "corgi",
+        "prompt": "a corgi dog"
+      },
+      {
+        "name": "blackcat",
+        "prompt": "a black cat"
+      }
+    ],
+    "background": "in a green meadow",
+    "shots": [
+      {
+        "prompt": "a corgi dog in a green meadow",
+        "present": [
+          "corgi"
+        ]
+      },
+      {
+        "prompt": "a corgi dog and a black cat in a green meadow",
+        "present": [
+          "corgi",
+          "blackcat"
+        ]
+      },
+      {
+        "prompt": "a black cat in a green meadow",
+        "present": [
+          "blackcat"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_27_chef_waiter",
+    "entities": [
+      {
+        "name": "chef",
+        "prompt": "a chef in a white uniform"
+      },
+      {
+        "name": "waiter",
+        "prompt": "a waiter in a black suit"
+      }
+    ],
+    "background": "on a sandy beach",
+    "shots": [
+      {
+        "prompt": "a chef in a white uniform and a waiter in a black suit on a sandy beach",
+        "present": [
+          "chef",
+          "waiter"
+        ]
+      },
+      {
+        "prompt": "a chef in a white uniform on a sandy beach",
+        "present": [
+          "chef"
+        ]
+      },
+      {
+        "prompt": "a chef in a white uniform and a waiter in a black suit on a sandy beach",
+        "present": [
+          "chef",
+          "waiter"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_28_seal_walrus",
+    "entities": [
+      {
+        "name": "seal",
+        "prompt": "a grey seal"
+      },
+      {
+        "name": "walrus",
+        "prompt": "a walrus with tusks"
+      }
+    ],
+    "background": "in a cozy living room",
+    "shots": [
+      {
+        "prompt": "a grey seal in a cozy living room",
+        "present": [
+          "seal"
+        ]
+      },
+      {
+        "prompt": "a walrus with tusks in a cozy living room",
+        "present": [
+          "walrus"
+        ]
+      },
+      {
+        "prompt": "a grey seal and a walrus with tusks in a cozy living room",
+        "present": [
+          "seal",
+          "walrus"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "story_29_deer_wolf",
+    "entities": [
+      {
+        "name": "deer",
+        "prompt": "a spotted deer"
+      },
+      {
+        "name": "wolf",
+        "prompt": "a grey wolf"
+      }
+    ],
+    "background": "in a snowy field",
+    "shots": [
+      {
+        "prompt": "a spotted deer and a grey wolf in a snowy field",
+        "present": [
+          "deer",
+          "wolf"
+        ]
+      },
+      {
+        "prompt": "a grey wolf in a snowy field",
+        "present": [
+          "wolf"
+        ]
+      },
+      {
+        "prompt": "a spotted deer in a snowy field",
+        "present": [
+          "deer"
+        ]
+      }
+    ]
+  }
+]

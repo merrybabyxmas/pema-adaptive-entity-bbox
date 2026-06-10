@@ -185,20 +185,8 @@ def viz_epoch_sample(model, encoder, story_path, out_dir, epoch, device,
     with open(infer_json, "w") as f:
         json.dump(infer_data, f)
 
-    # Launch GLIGEN layout-conditioned generation on GPU 1 (non-blocking)
-    import subprocess
-    gligen_out = gen_dir / f"epoch_{epoch:03d}_gligen"
-    ref_dir = out_dir / "entity_refs"
-    subprocess.Popen(
-        [sys.executable, str(Path(__file__).parent / "generate_with_layout.py"),
-         "--layout", str(infer_json),
-         "--out", str(gligen_out),
-         "--use-ref",
-         "--ref-dir", str(ref_dir)],
-        env={**os.environ, "CUDA_VISIBLE_DEVICES": "1"},
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-    )
-    logger.info(f"  -> GLIGEN+ref generation launched (GPU 1): epoch_{epoch:03d}_gligen/")
+    # (disabled) per-epoch GLIGEN gen on GPU 1 — keep training GPU-0 only.
+    # The matplotlib layout viz above is enough for monitoring bbox learning.
 
 
 def load_config(path):
