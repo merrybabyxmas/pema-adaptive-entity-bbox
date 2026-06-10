@@ -175,17 +175,43 @@ class LISAPipeline:
         print(f"  Entities: {[e['name'] for e in shot['entities']]}")
         print(f"  IP-Adapter masks: {ip_adapter_masks[0].shape}")
 
-        result = self.pipe(
-            prompt=full_prompt,
-            negative_prompt=negative_prompt,
-            ip_adapter_image=[entity_images],
-            cross_attention_kwargs={"ip_adapter_masks": ip_adapter_masks},
-            height=self.gen_cfg["height"],
-            width=self.gen_cfg["width"],
-            num_inference_steps=self.gen_cfg["num_inference_steps"],
-            guidance_scale=self.gen_cfg["guidance_scale"],
-            generator=generator,
-        )
+        # --- optional: RAAN/penalty self-attention masking (suppress an entity's
+        #     features from spreading across its region -> prevents duplication) ---
+        sa_cfg = self.cond_cfg.get("self_attn_control")
+        original_procs = None
+        if sa_cfg and sa_cfg.get("enabled") and len(shot["entities"]) > 1:
+            from src.generation.lisa.attention_injection import (
+                inject_attention_control, restore_attention_processors)
+            emasks = {ent["name"]: entity_masks[i]
+                      for i, ent in enumerate(shot["entities"])}
+            original_procs = inject_attention_control(
+                self.pipe, emasks,
+                config={
+                    "injection_layers": sa_cfg.get("injection_layers", "mid_up"),
+                    "use_raan": sa_cfg.get("use_raan", True),
+                    "raan_blend_ratio": sa_cfg.get("raan_blend_ratio", 0.8),
+                    "temporal_mask_lambda": float(sa_cfg.get("lambda", 1e4)),
+                },
+                generation_resolution=(self.gen_cfg["height"], self.gen_cfg["width"]),
+            )
+            print(f"  self-attn control ON ({'RAAN' if sa_cfg.get('use_raan',True) else 'penalty'})")
+
+        try:
+            result = self.pipe(
+                prompt=full_prompt,
+                negative_prompt=negative_prompt,
+                ip_adapter_image=[entity_images],
+                cross_attention_kwargs={"ip_adapter_masks": ip_adapter_masks},
+                height=self.gen_cfg["height"],
+                width=self.gen_cfg["width"],
+                num_inference_steps=self.gen_cfg["num_inference_steps"],
+                guidance_scale=self.gen_cfg["guidance_scale"],
+                generator=generator,
+            )
+        finally:
+            if original_procs is not None:
+                from src.generation.lisa.attention_injection import restore_attention_processors
+                restore_attention_processors(self.pipe, original_procs)
 
         image = result.images[0]
 

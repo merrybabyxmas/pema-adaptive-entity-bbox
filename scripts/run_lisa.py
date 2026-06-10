@@ -55,6 +55,8 @@ def main():
     ap.add_argument("--config", default="configs/lisa_default.yaml")
     ap.add_argument("--scenario", default="dalmatian_cat")
     ap.add_argument("--out", default="outputs/lisa/dalmatian_cat")
+    ap.add_argument("--self-attn-raan", action="store_true",
+                    help="enable RAAN self-attention masking (anti-duplication)")
     args = ap.parse_args()
 
     base = Path(__file__).parent.parent
@@ -62,6 +64,8 @@ def main():
         config = yaml.safe_load(f)
     config["evaluation"]["output_dir"] = str(base / args.out)
     config["anchors"]["save_dir"] = str(base / args.out / "anchor_bank")
+    if args.self_attn_raan:
+        config.setdefault("conditioning", {}).setdefault("self_attn_control", {})["enabled"] = True
     device = config["generation"]["device"]
     dtype = torch.float16 if config["generation"]["dtype"] == "float16" else torch.float32
     scenario = SCENARIOS[args.scenario]

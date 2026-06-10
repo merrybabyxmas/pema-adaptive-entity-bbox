@@ -27,6 +27,12 @@ layout:
 
 conditioning:
   ip_adapter_scale: 0.6
+  self_attn_control:           # RAAN self-attention masking (anti-duplication)
+    enabled: false
+    use_raan: true
+    raan_blend_ratio: 0.8
+    injection_layers: mid_up   # all | up_only | mid_up (skips 128^2 layers)
+    lambda: 10000.0
 
 evaluation:
   output_dir: "outputs/lisa"
