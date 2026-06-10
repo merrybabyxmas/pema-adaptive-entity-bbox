@@ -46,6 +46,26 @@ def adaptive(n):
     return 8.0, 0.8
 
 
+def enforce_gap(boxes: dict, gap: float = 0.12, shrink: float = 0.85):
+    """Push horizontally-ordered boxes apart so there is a background strip
+    between them — prevents large same-body-plan entities (quadrupeds, vehicles)
+    from bridging across touching boxes into one fused body. Boxes are xyxy [0,1]."""
+    if len(boxes) < 2:
+        return boxes
+    items = sorted(boxes.items(), key=lambda kv: (kv[1][0] + kv[1][2]) / 2)
+    n = len(items)
+    slot = (1.0 - gap * (n - 1)) / n          # equal slots with gaps between
+    out = {}
+    for i, (e, b) in enumerate(items):
+        x1 = i * (slot + gap)
+        x2 = x1 + slot
+        # shrink toward slot center a touch, keep original vertical extent
+        w = (x2 - x1) * shrink
+        cx = (x1 + x2) / 2
+        out[e] = [round(cx - w / 2, 4), b[1], round(cx + w / 2, 4), b[3]]
+    return out
+
+
 def plan_boxes(model, encoder, story, device):
     """Run the trained planner -> per-shot per-entity predicted xyxy boxes."""
     entities = [e["name"] for e in story["entities"]]
@@ -161,9 +181,11 @@ def main():
         # build a layout_plan with PREDICTED boxes (xyxy norm -> latent)
         shots_lp = []
         for s, boxes in enumerate(per_shot):
-            # safeguard: separate overlapping predicted boxes before LISA
-            # (overlapping bboxes weaken regional IP localization)
-            boxes = deoverlap_boxes(dict(boxes)) if len(boxes) > 1 else boxes
+            # safeguard: separate overlapping predicted boxes before LISA, then
+            # enforce a background gap so large same-body-plan entities (quadrupeds,
+            # vehicles) don't bridge across touching boxes into one fused body.
+            if len(boxes) > 1:
+                boxes = enforce_gap(deoverlap_boxes(dict(boxes)))
             ents = []
             for e, b in boxes.items():
                 cx = (b[0] + b[2]) / 2
