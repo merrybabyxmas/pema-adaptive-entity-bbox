@@ -254,7 +254,8 @@ def main():
         for s, shot in enumerate(shots_lp):
             n = len(shot["entities"]); sig, ips = adaptive(n)
             lisa.generate_shot(anchor_bank, layout_plan, shot_index=s, seed=42 + s,
-                               sigma_override=sig, ip_scale_override=ips, use_depth_occlusion=use_occ)
+                               sigma_override=sig, ip_scale_override=ips,
+                               use_depth_occlusion=use_occ)
             img = Image.open(sdir / f"shot_{s:03d}.png").convert("RGB")
             dr = ImageDraw.Draw(img); W, H = img.size
             for ent in shot["entities"]:
