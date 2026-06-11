@@ -10,10 +10,13 @@ class PresenceAwareBBoxPlanner(nn.Module):
     def __init__(self, d_text: int = 512, d_model: int = 256,
                  num_layers: int = 4, num_heads: int = 8, dropout: float = 0.1,
                  use_state: bool = True, use_relation: bool = True,
-                 use_shot_attn: bool = True, use_temporal_attn: bool = True):
+                 use_shot_attn: bool = True, use_temporal_attn: bool = True,
+                 use_shot_emb: bool = True, use_entity_emb: bool = True):
         super().__init__()
         self.use_state = use_state
         self.use_relation = use_relation
+        self.use_shot_emb = use_shot_emb
+        self.use_entity_emb = use_entity_emb
         self.shot_proj = nn.Linear(d_text, d_model)
         self.entity_proj = nn.Linear(d_text, d_model)
         if use_state:
@@ -46,7 +49,11 @@ class PresenceAwareBBoxPlanner(nn.Module):
         hs = self.shot_proj(shot_emb)[:, :, None, :]      # [B,S,1,d]
         he = self.entity_proj(entity_emb)[:, None, :, :]  # [B,1,E,d]
 
-        q = hs + he                                        # [B,S,E,d]
+        q = torch.zeros(B, S, E, hs.shape[-1], device=hs.device, dtype=hs.dtype)
+        if self.use_shot_emb:
+            q = q + hs                                     # broadcast [B,S,1,d]
+        if self.use_entity_emb:
+            q = q + he                                     # broadcast [B,1,E,d]
         if self.use_state:
             q = q + self.state_emb(state_ids)              # [B,S,E,d]
 
@@ -102,4 +109,6 @@ def build_model(cfg: dict) -> nn.Module:
         use_relation=cfg.get("use_relation", True),
         use_shot_attn=cfg.get("use_shot_attn", True),
         use_temporal_attn=cfg.get("use_temporal_attn", True),
+        use_shot_emb=cfg.get("use_shot_emb", True),
+        use_entity_emb=cfg.get("use_entity_emb", True),
     )

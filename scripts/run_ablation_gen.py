@@ -52,6 +52,12 @@ JOBS = {
     "C_depthown":    dict(layout="planner", ckpt="abl_full", render="depthown"),
     # final chosen config: state + depth kept, relation + entity-interaction removed
     "FINAL_combo":   dict(layout="planner", ckpt="planner_v6_combo", render="full"),
+    "CABL_full":  dict(layout="planner", ckpt="cabl_full", render="full"),
+    "CABL_wo_shotemb":  dict(layout="planner", ckpt="cabl_wo_shotemb", render="full"),
+    "CABL_wo_entityemb":  dict(layout="planner", ckpt="cabl_wo_entityemb", render="full"),
+    "CABL_wo_state":  dict(layout="planner", ckpt="cabl_wo_state", render="full"),
+    "CABL_wo_temporal":  dict(layout="planner", ckpt="cabl_wo_temporal", render="full"),
+    "CABL_wo_depth":  dict(layout="planner", ckpt="cabl_wo_depth", render="full"),
 }
 MEAN_AREA = 0.223
 
