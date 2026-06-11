@@ -101,12 +101,17 @@ class SameEntityTemporalAttention(nn.Module):
 
 
 class LayoutBlock(nn.Module):
-    def __init__(self, d_model: int, num_heads: int, dropout: float = 0.1):
+    def __init__(self, d_model: int, num_heads: int, dropout: float = 0.1,
+                 use_shot_attn: bool = True, use_temporal_attn: bool = True):
         super().__init__()
-        self.shot_attn = SameShotAttention(d_model, num_heads, dropout)
-        self.temp_attn = SameEntityTemporalAttention(d_model, num_heads, dropout)
-        self.norm1 = nn.LayerNorm(d_model)
-        self.norm2 = nn.LayerNorm(d_model)
+        self.use_shot_attn = use_shot_attn
+        self.use_temporal_attn = use_temporal_attn
+        if use_shot_attn:
+            self.shot_attn = SameShotAttention(d_model, num_heads, dropout)
+            self.norm1 = nn.LayerNorm(d_model)
+        if use_temporal_attn:
+            self.temp_attn = SameEntityTemporalAttention(d_model, num_heads, dropout)
+            self.norm2 = nn.LayerNorm(d_model)
         self.norm3 = nn.LayerNorm(d_model)
         self.ffn = nn.Sequential(
             nn.Linear(d_model, d_model * 4),
@@ -118,7 +123,9 @@ class LayoutBlock(nn.Module):
 
     def forward(self, q: torch.Tensor, presence: torch.Tensor,
                 relation_bias: torch.Tensor = None) -> torch.Tensor:
-        q = self.norm1(q + self.shot_attn(q, presence, relation_bias))
-        q = self.norm2(q + self.temp_attn(q, presence))
+        if self.use_shot_attn:
+            q = self.norm1(q + self.shot_attn(q, presence, relation_bias))
+        if self.use_temporal_attn:
+            q = self.norm2(q + self.temp_attn(q, presence))
         q = self.norm3(q + self.ffn(q))
         return q

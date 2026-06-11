@@ -1,0 +1,32 @@
+seed: 42
+paths:
+  train_jsonl: data/splits/train.jsonl
+  val_jsonl: data/splits/val.jsonl
+  output_dir: outputs/runs/abl_full
+model:
+  arch: planner
+  d_text: 512
+  d_model: 256
+  num_layers: 4
+  num_heads: 8
+  dropout: 0.1
+  text_encoder: clip_vitb32
+  freeze_text_encoder: true
+training:
+  epochs: 15
+  batch_size: 64
+  num_workers: 4
+  lr: 0.0001
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  mixed_precision: true
+  max_shots: 5
+  max_entities: 5
+loss:
+  lambda_l1: 1.0
+  lambda_giou: 1.0
+  lambda_depth: 1.0
+  depth_margin: 0.1
+eval:
+  eval_every: 1
+  save_every: 5

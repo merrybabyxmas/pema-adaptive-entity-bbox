@@ -222,12 +222,11 @@ def _depth_pair_accuracy(pred_depth, target_depth, presence, eps=0.05):
 
 def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
     model.train()
-    lambda_iou = cfg["loss"]["lambda_iou"]
-    lambda_ov = cfg["loss"]["lambda_overlap"]
-    lambda_temp = cfg["loss"]["lambda_temp"]
-    lambda_depth = cfg["loss"].get("lambda_depth", 0.0)
+    # Clean 2-objective formulation: L = L_box (L1 + GIoU) + lambda_dep * L_depth
+    lambda_l1 = cfg["loss"].get("lambda_l1", 1.0)
+    lambda_giou = cfg["loss"].get("lambda_giou", 1.0)
+    lambda_depth = cfg["loss"].get("lambda_depth", 1.0)
     depth_margin = cfg["loss"].get("depth_margin", 0.1)
-    overlap_tau = cfg["loss"]["overlap_tau"]
 
     total_loss = 0.0
     n_batches = 0
@@ -247,12 +246,9 @@ def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
             pred_out = model(shot_emb, entity_emb, state_ids, presence, relation_ids)
             pred_boxes, pred_depth = pred_out[..., :4], pred_out[..., 4]
             l_box = masked_l1_loss(pred_boxes, target_cx, target_mask)
-            l_iou = masked_iou_loss(pred_boxes, target_cx, target_mask)
-            l_ov = overlap_loss(pred_boxes, presence, tau=overlap_tau)
-            l_temp = temporal_consistency_loss(pred_boxes, state_ids, presence)
+            l_giou = masked_iou_loss(pred_boxes, target_cx, target_mask)
             l_depth = depth_ranking_loss(pred_depth, target_depth, presence, margin=depth_margin)
-            loss = (l_box + lambda_iou * l_iou + lambda_ov * l_ov
-                    + lambda_temp * l_temp + lambda_depth * l_depth)
+            loss = lambda_l1 * l_box + lambda_giou * l_giou + lambda_depth * l_depth
 
         optimizer.zero_grad()
         scaler.scale(loss).backward()
@@ -270,12 +266,10 @@ def train_epoch(model, encoder, loader, optimizer, scaler, cfg, device):
 @torch.no_grad()
 def eval_epoch(model, encoder, loader, cfg, device):
     model.eval()
-    lambda_iou = cfg["loss"]["lambda_iou"]
-    lambda_ov = cfg["loss"]["lambda_overlap"]
-    lambda_temp = cfg["loss"]["lambda_temp"]
-    lambda_depth = cfg["loss"].get("lambda_depth", 0.0)
+    lambda_l1 = cfg["loss"].get("lambda_l1", 1.0)
+    lambda_giou = cfg["loss"].get("lambda_giou", 1.0)
+    lambda_depth = cfg["loss"].get("lambda_depth", 1.0)
     depth_margin = cfg["loss"].get("depth_margin", 0.1)
-    overlap_tau = cfg["loss"]["overlap_tau"]
 
     all_metrics = {"l1": [], "iou": [], "giou": [], "center_err": [], "area_err": []}
     depth_accs = []
@@ -298,12 +292,9 @@ def eval_epoch(model, encoder, loader, cfg, device):
                              state_ids, presence, relation_ids)
             pred_boxes, pred_depth = pred_out[..., :4], pred_out[..., 4]
             l_box = masked_l1_loss(pred_boxes, target_cx, target_mask)
-            l_iou = masked_iou_loss(pred_boxes, target_cx, target_mask)
-            l_ov = overlap_loss(pred_boxes, presence, tau=overlap_tau)
-            l_temp = temporal_consistency_loss(pred_boxes, state_ids, presence)
+            l_giou = masked_iou_loss(pred_boxes, target_cx, target_mask)
             l_depth = depth_ranking_loss(pred_depth, target_depth, presence, margin=depth_margin)
-            loss = (l_box + lambda_iou * l_iou + lambda_ov * l_ov
-                    + lambda_temp * l_temp + lambda_depth * l_depth)
+            loss = lambda_l1 * l_box + lambda_giou * l_giou + lambda_depth * l_depth
 
         metrics = compute_metrics(pred_boxes, target_cx, target_mask)
         for k, v in metrics.items():

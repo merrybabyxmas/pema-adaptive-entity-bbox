@@ -3,7 +3,7 @@ seed: 42
 paths:
   train_jsonl: data/splits/train.jsonl
   val_jsonl: data/splits/val.jsonl
-  output_dir: outputs/runs/bbox_planner_v4_depth
+  output_dir: outputs/runs/bbox_planner_v5_clean
 
 model:
   arch: planner           # planner | mlp_baseline
@@ -27,12 +27,16 @@ training:
   max_entities: 5
 
 loss:
-  lambda_iou: 1.0
-  lambda_overlap: 1.0
-  lambda_temp: 0.0
-  lambda_depth: 1.0       # occlusion-depth pairwise ranking loss
+  # Clean 2-objective formulation (AAAI):  L = L_box + lambda_depth * L_depth
+  #   L_box = lambda_l1 * L1 + lambda_giou * GIoU   (one layout-reconstruction objective)
+  #   L_depth = pairwise occlusion-order ranking
+  # overlap/temporal losses removed: overlap/fusion is handled at generation time
+  # (resolve_for_occlusion + apply_depth_occlusion), temporal continuity comes from
+  # state embedding + same-entity temporal attention (architecture, not a loss).
+  lambda_l1: 1.0
+  lambda_giou: 1.0
+  lambda_depth: 1.0
   depth_margin: 0.1
-  overlap_tau: 0.25
 
 eval:
   eval_every: 1

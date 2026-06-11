@@ -8,15 +8,23 @@ from src.model.embeddings import StateEmbedding, RelationBias
 
 class PresenceAwareBBoxPlanner(nn.Module):
     def __init__(self, d_text: int = 512, d_model: int = 256,
-                 num_layers: int = 4, num_heads: int = 8, dropout: float = 0.1):
+                 num_layers: int = 4, num_heads: int = 8, dropout: float = 0.1,
+                 use_state: bool = True, use_relation: bool = True,
+                 use_shot_attn: bool = True, use_temporal_attn: bool = True):
         super().__init__()
+        self.use_state = use_state
+        self.use_relation = use_relation
         self.shot_proj = nn.Linear(d_text, d_model)
         self.entity_proj = nn.Linear(d_text, d_model)
-        self.state_emb = StateEmbedding(d_model)
-        self.relation_bias = RelationBias(num_heads)
+        if use_state:
+            self.state_emb = StateEmbedding(d_model)
+        if use_relation:
+            self.relation_bias = RelationBias(num_heads)
 
         self.layers = nn.ModuleList([
-            LayoutBlock(d_model, num_heads, dropout) for _ in range(num_layers)
+            LayoutBlock(d_model, num_heads, dropout,
+                        use_shot_attn=use_shot_attn, use_temporal_attn=use_temporal_attn)
+            for _ in range(num_layers)
         ])
         self.bbox_head = BBoxHead(d_model)
         # occlusion depth per entity (0=back, 1=front), sigmoid in [0,1]
@@ -37,11 +45,12 @@ class PresenceAwareBBoxPlanner(nn.Module):
 
         hs = self.shot_proj(shot_emb)[:, :, None, :]      # [B,S,1,d]
         he = self.entity_proj(entity_emb)[:, None, :, :]  # [B,1,E,d]
-        hstate = self.state_emb(state_ids)                 # [B,S,E,d]
 
-        q = hs + he + hstate                               # [B,S,E,d]
+        q = hs + he                                        # [B,S,E,d]
+        if self.use_state:
+            q = q + self.state_emb(state_ids)              # [B,S,E,d]
 
-        rel_bias = self.relation_bias(relation_ids)        # [B,S,H,E,E]
+        rel_bias = self.relation_bias(relation_ids) if self.use_relation else None
 
         for layer in self.layers:
             q = layer(q, presence, rel_bias)
@@ -89,4 +98,8 @@ def build_model(cfg: dict) -> nn.Module:
     return PresenceAwareBBoxPlanner(
         d_text=d_text, d_model=d_model,
         num_layers=num_layers, num_heads=num_heads, dropout=dropout,
+        use_state=cfg.get("use_state", True),
+        use_relation=cfg.get("use_relation", True),
+        use_shot_attn=cfg.get("use_shot_attn", True),
+        use_temporal_attn=cfg.get("use_temporal_attn", True),
     )

@@ -103,6 +103,7 @@ class LISAPipeline:
         seed: int | None = None,
         sigma_override: float | None = None,
         ip_scale_override: float | None = None,
+        use_depth_occlusion: bool = True,
     ) -> dict:
         """Generate a single shot with regional entity conditioning.
 
@@ -125,7 +126,7 @@ class LISAPipeline:
         # depth-ordered occlusion: front entity (higher predicted depth) owns the
         # overlap; the back one is carved out -> natural occlusion, no fusion.
         depths = [ent.get("depth", 0.5) for ent in shot["entities"]]
-        if len(entity_masks) > 1:
+        if use_depth_occlusion and len(entity_masks) > 1:
             entity_masks, bg_mask = apply_depth_occlusion(entity_masks, depths)
         entity_masks, bg_mask = normalize_masks(entity_masks, bg_mask)
 
