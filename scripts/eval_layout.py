@@ -51,6 +51,7 @@ def main():
     ap.add_argument("--root", default="outputs/lisa/aaai_cablation")
     ap.add_argument("--runs", default="outputs/runs")
     ap.add_argument("--stories", default="data/captions/stories_aaai_eval_120.json")
+    ap.add_argument("--llm-layout", default="outputs/layouts/llm_aaai.json")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     base = Path(__file__).parent.parent; dev = "cuda"
@@ -84,7 +85,7 @@ def main():
 
     # shared resources for non-planner layout sources
     retr_idx = build_retrieval_index(str(base / "data/splits/train.jsonl"))
-    llm_path = base / "outputs/layouts/llm_aaai.json"
+    llm_path = base / args.llm_layout
     llm = json.loads(llm_path.read_text()) if llm_path.exists() else {}
 
     def intended_boxes(job, st, model):

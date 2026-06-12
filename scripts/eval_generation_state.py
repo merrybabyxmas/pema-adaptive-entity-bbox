@@ -34,7 +34,9 @@ def lab(n):
 
 
 def group_of(name):
-    # aaai_A00_... -> 'A'
+    # "P01_relay_..." -> 'P01' ; "aaai_A00_..." -> 'A'
+    if name.startswith("P0"):
+        return name.split("_")[0]
     try:
         return name.split("_")[1][0]
     except Exception:
@@ -70,9 +72,8 @@ def main():
     for job in args.jobs.split(","):
         jdir = base / args.root / job
         raw = {}
-        # accumulators: overall + per group
-        acc = {g: {"esa": [], "ta": [], "miss": [], "leak": []} for g in "ABCDEFGH"}
-        acc["ALL"] = {"esa": [], "ta": [], "miss": [], "leak": []}
+        from collections import defaultdict
+        acc = defaultdict(lambda: {"esa": [], "ta": [], "miss": [], "leak": []})
         for st in stories:
             names = [e["name"] for e in st["entities"]]
             T, N = len(st["shots"]), len(names)
@@ -101,12 +102,12 @@ def main():
                 if val is None:
                     continue
                 acc["ALL"][key].append(val)
-                if g in acc:
-                    acc[g][key].append(val)
+                acc[g][key].append(val)
         def agg(d):
             return {k: (round(float(np.mean(v)), 4) if v else None) for k, v in d.items()}
+        groups = sorted(k for k in acc if k != "ALL")
         out[job] = {"overall": agg(acc["ALL"]),
-                    "per_group": {g: agg(acc[g]) for g in "ABCDEFGH"}}
+                    "per_group": {g: agg(acc[g]) for g in groups}}
         json.dump(raw, open(base / args.raw / f"state_{job}.json", "w"))
         print(f"  {job}: ESA={out[job]['overall']['esa']} TA={out[job]['overall']['ta']} "
               f"miss={out[job]['overall']['miss']} leak={out[job]['overall']['leak']}", flush=True)

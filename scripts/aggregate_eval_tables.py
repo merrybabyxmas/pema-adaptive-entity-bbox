@@ -15,7 +15,7 @@ Writes to outputs/eval_120/tables/ and outputs/eval_120/figures/.
 
 Usage: python scripts/aggregate_eval_tables.py
 """
-import sys, os, json, glob, csv
+import sys, os, json, glob, csv, argparse
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pathlib import Path
 import numpy as np
@@ -24,10 +24,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 BASE = Path(__file__).parent.parent
-T = BASE / "outputs/eval_120/tables"; T.mkdir(parents=True, exist_ok=True)
-F = BASE / "outputs/eval_120/figures"; F.mkdir(parents=True, exist_ok=True)
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--evaldir", default="outputs/eval_120")
+_ap.add_argument("--ours", default="FINAL_combo")  # job key used as "Ours"
+_args, _ = _ap.parse_known_args()
+ED = _args.evaldir
+T = BASE / ED / "tables"; T.mkdir(parents=True, exist_ok=True)
+F = BASE / ED / "figures"; F.mkdir(parents=True, exist_ok=True)
 LAYOUT_ROWS = [("B_template", "Template"), ("B_retrieval", "Retrieval"),
-               ("B_llm", "LLM-direct"), ("B_center", "Center"), ("FINAL_combo", "Ours")]
+               ("B_llm", "LLM-direct"), ("B_center", "Center"), (_args.ours, "Ours")]
 
 
 def load_merge(pattern):
@@ -84,14 +89,16 @@ def write(name, headers, rows, caption):
 
 
 def main():
-    lay = load_merge("outputs/eval_120/metrics/lay_*.json")
-    state = load_merge("outputs/eval_120/metrics/state_*.json")
-    det = load_merge("outputs/abl_logs/det_*.json")
-    det.update(load_merge("outputs/eval_120/metrics/det_final.json"))
-    det.update(load_merge("outputs/eval_120/metrics/det_bcenter.json"))
+    lay = load_merge(f"{ED}/metrics/lay_*.json")
+    state = load_merge(f"{ED}/metrics/state_*.json")
+    det = load_merge(f"{ED}/metrics/det_*.json")
+    if not det:  # fall back to the 120 run's detection sources
+        det = load_merge("outputs/abl_logs/det_*.json")
+        det.update(load_merge("outputs/eval_120/metrics/det_final.json"))
+        det.update(load_merge("outputs/eval_120/metrics/det_bcenter.json"))
     # quality means
     q = {}
-    for f in glob.glob(str(BASE / "outputs/eval_120/metrics/quality_*.csv")):
+    for f in glob.glob(str(BASE / f"{ED}/metrics/quality_*.csv")):
         for r in csv.DictReader(open(f)):
             m = r["method"]; q.setdefault(m, {"clip_t": [], "aesthetic": [], "sharpness": []})
             for k in q[m]:
@@ -113,7 +120,7 @@ def main():
         rows.append([lab, s.get("esa"), s.get("ta"), s.get("miss"), s.get("leak"),
                      g.get("grounding_mIoU"), g.get("SR@0.5"), d.get("presence_recall"),
                      d.get("dup_rate"), round(clt, 3), round(aes, 3)])
-        raw_p = BASE / f"outputs/eval_120/detections/state_{jk}.json"
+        raw_p = BASE / f"{ED}/detections/state_{jk}.json"
         if raw_p.exists():
             esa_v, ta_v = per_story_esa_ta(json.load(open(raw_p)))
             boot[lab] = {"ESA_CI": boot_ci(esa_v), "TA_CI": boot_ci(ta_v)}
